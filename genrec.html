@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-02-06 Mon 13:52 -->
+<!-- 2023-02-06 Mon 14:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>GENREC</title>
@@ -24,48 +24,48 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgac792e7">Implementation</a>
+<li><a href="#org18d5b82">Implementation</a>
 <ul>
-<li><a href="#orge655672">Utilities</a></li>
-<li><a href="#org07e6eef">Type utilities</a>
+<li><a href="#orgf16f836">Utilities</a></li>
+<li><a href="#orgf6206f6">Type utilities</a>
 <ul>
-<li><a href="#orgf506463">Convenient ADT definition</a></li>
+<li><a href="#org9718cd0">Convenient ADT definition</a></li>
 </ul>
 </li>
-<li><a href="#orgfede82f">Hole-terms</a></li>
-<li><a href="#org8073107">Skeleton Language</a>
+<li><a href="#orgf6826b5">Hole-terms</a></li>
+<li><a href="#orgdb08003">Skeleton Language</a>
 <ul>
-<li><a href="#org889536b">Code Generator Debugging</a></li>
-<li><a href="#org1f54f12">Resource Limit Helpers</a></li>
-<li><a href="#org9269b2f">PFUN definition</a></li>
+<li><a href="#org1ff6b29">Code Generator Debugging</a></li>
+<li><a href="#org7b414f8">Resource Limit Helpers</a></li>
+<li><a href="#org64e548e">PFUN definition</a></li>
 </ul>
 </li>
-<li><a href="#org2ab08df">Skeleton Generators</a>
+<li><a href="#org8483f4a">Skeleton Generators</a>
 <ul>
-<li><a href="#org9d23aff">Single-dispatch function population</a></li>
-<li><a href="#orgcff66d2">Paramorphism</a></li>
+<li><a href="#org59950ee">Single-dispatch function population</a></li>
+<li><a href="#org74e7b57">Paramorphism</a></li>
 </ul>
 </li>
-<li><a href="#org64ffad5">Search operators</a></li>
-<li><a href="#orgfb71073">Search algorithm</a></li>
-<li><a href="#org7183e07">Profiling</a></li>
-<li><a href="#orgaf9efe7">Test Generation</a></li>
-<li><a href="#org00b2093">Built-in Types</a></li>
-<li><a href="#orgc8fa6d7">Convience</a></li>
+<li><a href="#org22efc97">Search operators</a></li>
+<li><a href="#orgfc8d581">Search algorithm</a></li>
+<li><a href="#org2cc77e5">Profiling</a></li>
+<li><a href="#org7e5522f">Test Generation</a></li>
+<li><a href="#orgb87c72a">Built-in Types</a></li>
+<li><a href="#org65a86d5">Convience</a></li>
 </ul>
 </li>
-<li><a href="#orgb56c579">Emacs Support</a>
+<li><a href="#org97440f1">Emacs Support</a>
 <ul>
-<li><a href="#org91a0c5c">Notes</a></li>
-<li><a href="#org72bb2ae">Configurations</a></li>
+<li><a href="#org5e40a8c">Notes</a></li>
+<li><a href="#orgbf7f3e1">Configurations</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgac792e7" class="outline-2">
-<h2 id="orgac792e7">Implementation</h2>
-<div class="outline-text-2" id="text-orgac792e7">
+<div id="outline-container-org18d5b82" class="outline-2">
+<h2 id="org18d5b82">Implementation</h2>
+<div class="outline-text-2" id="text-org18d5b82">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">defpackage</span> <span style="color: #7070a0;">#:genrec</span>
   (<span style="color: #7070a0;">:use</span> <span style="color: #7070a0;">#:cl</span> <span style="color: #7070a0;">#:iter</span> <span style="color: #7070a0;">#:sb-cltl2</span>)
@@ -81,9 +81,9 @@
 </pre>
 </div>
 </div>
-<div id="outline-container-orge655672" class="outline-3">
-<h3 id="orge655672">Utilities</h3>
-<div class="outline-text-3" id="text-orge655672">
+<div id="outline-container-orgf16f836" class="outline-3">
+<h3 id="orgf16f836">Utilities</h3>
+<div class="outline-text-3" id="text-orgf16f836">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">klet</span> (((name arglist <span style="color: #7070a0;">&amp;body</span> cont)) <span style="color: #7070a0;">&amp;body</span> body)
   <span style="color: #FF4FA4;">"Stack-allocate a continuation function during evaluation of BODY."</span>
@@ -120,9 +120,9 @@ Misc CL types:
 </div>
 </div>
 </div>
-<div id="outline-container-org07e6eef" class="outline-3">
-<h3 id="org07e6eef">Type utilities</h3>
-<div class="outline-text-3" id="text-org07e6eef">
+<div id="outline-container-orgf6206f6" class="outline-3">
+<h3 id="orgf6206f6">Type utilities</h3>
+<div class="outline-text-3" id="text-orgf6206f6">
 <p>
 Here we have a poor man's polymorphic type system:
 </p>
@@ -181,7 +181,7 @@ For a fully specialized type, each constructor should construct runtime value of
 </pre>
 </div>
 <p>
-See <a href="#org00b2093">Built-in Types</a> for some example of using this low level interface. If polymorphism is not needed, we recommend using <code>define-adt</code>.
+See <a href="#orgb87c72a">Built-in Types</a> for some example of using this low level interface. If polymorphism is not needed, we recommend using <code>define-adt</code>.
 </p>
 
 <p>
@@ -204,9 +204,9 @@ Compute default hole-term and value:
 </pre>
 </div>
 </div>
-<div id="outline-container-orgf506463" class="outline-4">
-<h4 id="orgf506463">Convenient ADT definition</h4>
-<div class="outline-text-4" id="text-orgf506463">
+<div id="outline-container-org9718cd0" class="outline-4">
+<h4 id="org9718cd0">Convenient ADT definition</h4>
+<div class="outline-text-4" id="text-org9718cd0">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">define-adt</span> (name <span style="color: #7070a0;">&amp;body</span> constructors)
   (<span style="color: #7070a0;">setq</span> constructors (mapcar (<span style="color: #7070a0;">lambda</span> (clause) (<span style="color: #7070a0;">if</span> (consp clause) clause (list clause))) constructors))
@@ -232,9 +232,9 @@ Compute default hole-term and value:
 </div>
 </div>
 </div>
-<div id="outline-container-orgfede82f" class="outline-3">
-<h3 id="orgfede82f">Hole-terms</h3>
-<div class="outline-text-3" id="text-orgfede82f">
+<div id="outline-container-orgf6826b5" class="outline-3">
+<h3 id="orgf6826b5">Hole-terms</h3>
+<div class="outline-text-3" id="text-orgf6826b5">
 <p>
 <i>Hole-terms</i> are basically a first-order subset of regular lisp, with only function applications and special <code>(tryable n)</code> forms.
 </p>
@@ -298,13 +298,13 @@ When called with a single argument (the vector of tryable values), return the va
 </div>
 </div>
 </div>
-<div id="outline-container-org8073107" class="outline-3">
-<h3 id="org8073107">Skeleton Language</h3>
-<div class="outline-text-3" id="text-org8073107">
+<div id="outline-container-orgdb08003" class="outline-3">
+<h3 id="orgdb08003">Skeleton Language</h3>
+<div class="outline-text-3" id="text-orgdb08003">
 </div>
-<div id="outline-container-org889536b" class="outline-4">
-<h4 id="org889536b">Code Generator Debugging</h4>
-<div class="outline-text-4" id="text-org889536b">
+<div id="outline-container-org1ff6b29" class="outline-4">
+<h4 id="org1ff6b29">Code Generator Debugging</h4>
+<div class="outline-text-4" id="text-org1ff6b29">
 <p>
 It is very convenient to debug these code generators, such as <code>population-pfun</code>, with SLIME macrostepper (enable SLIME contrib <code>slime-macrostep</code> then <code>macrostep-expand</code>).
 </p>
@@ -338,9 +338,9 @@ Notes:
 </div>
 </div>
 
-<div id="outline-container-org1f54f12" class="outline-4">
-<h4 id="org1f54f12">Resource Limit Helpers</h4>
-<div class="outline-text-4" id="text-org1f54f12">
+<div id="outline-container-org7b414f8" class="outline-4">
+<h4 id="org7b414f8">Resource Limit Helpers</h4>
+<div class="outline-text-4" id="text-org7b414f8">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*stack-limit*</span>) (<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*pc*</span>)
 (<span style="color: #7070a0;">defun</span> <span style="color: #000000;">call-with-resource-limit</span> (thunk)
@@ -360,9 +360,9 @@ Notes:
 </div>
 </div>
 
-<div id="outline-container-org9269b2f" class="outline-4">
-<h4 id="org9269b2f">PFUN definition</h4>
-<div class="outline-text-4" id="text-org9269b2f">
+<div id="outline-container-org64e548e" class="outline-4">
+<h4 id="org64e548e">PFUN definition</h4>
+<div class="outline-text-4" id="text-org64e548e">
 <p>
 A <i>PFUN</i> is a partial function that can be evaluated when <code>*par*</code> is bound to a vector of execution procedures (to make it complete). Use <code>compile-par</code> to compile a sequence of hole-terms to a suitable value for <code>*par*</code>.
 </p>
@@ -457,9 +457,9 @@ A <i>PFUN</i> is a partial function that can be evaluated when <code>*par*</code
 </div>
 </div>
 </div>
-<div id="outline-container-org2ab08df" class="outline-3">
-<h3 id="org2ab08df">Skeleton Generators</h3>
-<div class="outline-text-3" id="text-org2ab08df">
+<div id="outline-container-org8483f4a" class="outline-3">
+<h3 id="org8483f4a">Skeleton Generators</h3>
+<div class="outline-text-3" id="text-org8483f4a">
 <p>
 Skeleton generators are written as macros. By convention, we use <code>compiler-let</code> to pass down expected output type via <code>*output-type*</code>, so that skeleton generator macros can do return-type polymorphism. Each skeleton generator macro should also do so for their sub-forms.
 </p>
@@ -468,9 +468,9 @@ Skeleton generators are written as macros. By convention, we use <code>compiler-
 </pre>
 </div>
 </div>
-<div id="outline-container-org9d23aff" class="outline-4">
-<h4 id="org9d23aff">Single-dispatch function population</h4>
-<div class="outline-text-4" id="text-org9d23aff">
+<div id="outline-container-org59950ee" class="outline-4">
+<h4 id="org59950ee">Single-dispatch function population</h4>
+<div class="outline-text-4" id="text-org59950ee">
 <p>
 A set of mutually recursive function, each dispatching on their first argument.
 </p>
@@ -551,9 +551,9 @@ A set of mutually recursive function, each dispatching on their first argument.
 </div>
 </div>
 </div>
-<div id="outline-container-orgcff66d2" class="outline-4">
-<h4 id="orgcff66d2">Paramorphism</h4>
-<div class="outline-text-4" id="text-orgcff66d2">
+<div id="outline-container-org74e7b57" class="outline-4">
+<h4 id="org74e7b57">Paramorphism</h4>
+<div class="outline-text-4" id="text-org74e7b57">
 <p>
 Properly-nested paramorphism.
 </p>
@@ -600,9 +600,9 @@ Properly-nested paramorphism.
 </div>
 </div>
 
-<div id="outline-container-org64ffad5" class="outline-3">
-<h3 id="org64ffad5">Search operators</h3>
-<div class="outline-text-3" id="text-org64ffad5">
+<div id="outline-container-org22efc97" class="outline-3">
+<h3 id="org22efc97">Search operators</h3>
+<div class="outline-text-3" id="text-org22efc97">
 <p>
 We apply the following rewrites recursively to every subterm in a given term:
 </p>
@@ -733,9 +733,9 @@ We compile specialized versions of <code>value-size-function</code> and <code>ed
 </div>
 </div>
 </div>
-<div id="outline-container-orgfb71073" class="outline-3">
-<h3 id="orgfb71073">Search algorithm</h3>
-<div class="outline-text-3" id="text-orgfb71073">
+<div id="outline-container-orgfc8d581" class="outline-3">
+<h3 id="orgfc8d581">Search algorithm</h3>
+<div class="outline-text-3" id="text-orgfc8d581">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">locally</span>
     (<span style="color: #7070a0;">declare</span> (optimize (speed 3)))
@@ -854,9 +854,9 @@ We compile specialized versions of <code>value-size-function</code> and <code>ed
 </div>
 </div>
 
-<div id="outline-container-org7183e07" class="outline-3">
-<h3 id="org7183e07">Profiling</h3>
-<div class="outline-text-3" id="text-org7183e07">
+<div id="outline-container-org2cc77e5" class="outline-3">
+<h3 id="org2cc77e5">Profiling</h3>
+<div class="outline-text-3" id="text-org2cc77e5">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">call-with-advices</span> (names advices thunk)
   (mapcar (<span style="color: #7070a0;">lambda</span> (name advice) (sb-int:encapsulate name 'profiling advice))
@@ -904,9 +904,9 @@ We compile specialized versions of <code>value-size-function</code> and <code>ed
 </div>
 </div>
 
-<div id="outline-container-orgaf9efe7" class="outline-3">
-<h3 id="orgaf9efe7">Test Generation</h3>
-<div class="outline-text-3" id="text-orgaf9efe7">
+<div id="outline-container-org7e5522f" class="outline-3">
+<h3 id="org7e5522f">Test Generation</h3>
+<div class="outline-text-3" id="text-org7e5522f">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">sample</span> (type)
   (<span style="color: #7070a0;">let</span> ((op (nth (random (length (constructors type))) (constructors type))))
@@ -947,9 +947,9 @@ We compile specialized versions of <code>value-size-function</code> and <code>ed
 </div>
 </div>
 
-<div id="outline-container-org00b2093" class="outline-3">
-<h3 id="org00b2093">Built-in Types</h3>
-<div class="outline-text-3" id="text-org00b2093">
+<div id="outline-container-orgb87c72a" class="outline-3">
+<h3 id="orgb87c72a">Built-in Types</h3>
+<div class="outline-text-3" id="text-orgb87c72a">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">deftype</span> <span style="color: #000000;">list-of</span> (element-type) (<span style="color: #7070a0;">declare</span> (ignore element-type)) t)
 (<span style="color: #7070a0;">deftype</span> <span style="color: #000000;">tree-of</span> (element-type) (<span style="color: #7070a0;">declare</span> (ignore element-type)) t)
@@ -987,9 +987,9 @@ We compile specialized versions of <code>value-size-function</code> and <code>ed
 </div>
 </div>
 
-<div id="outline-container-orgc8fa6d7" class="outline-3">
-<h3 id="orgc8fa6d7">Convience</h3>
-<div class="outline-text-3" id="text-orgc8fa6d7">
+<div id="outline-container-org65a86d5" class="outline-3">
+<h3 id="org65a86d5">Convience</h3>
+<div class="outline-text-3" id="text-org65a86d5">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">call-pfun</span> (pfun par <span style="color: #7070a0;">&amp;rest</span> args)
   (<span style="color: #7070a0;">with-resource-limit</span>
@@ -1009,13 +1009,13 @@ We compile specialized versions of <code>value-size-function</code> and <code>ed
 </div>
 </div>
 
-<div id="outline-container-orgb56c579" class="outline-2">
-<h2 id="orgb56c579">Emacs Support</h2>
-<div class="outline-text-2" id="text-orgb56c579">
+<div id="outline-container-org97440f1" class="outline-2">
+<h2 id="org97440f1">Emacs Support</h2>
+<div class="outline-text-2" id="text-org97440f1">
 </div>
-<div id="outline-container-org91a0c5c" class="outline-3">
-<h3 id="org91a0c5c">Notes</h3>
-<div class="outline-text-3" id="text-org91a0c5c">
+<div id="outline-container-org5e40a8c" class="outline-3">
+<h3 id="org5e40a8c">Notes</h3>
+<div class="outline-text-3" id="text-org5e40a8c">
 <p>
 <code>literate-lisp</code> with <code>poly-org</code> is super cool, but as of time of writing (<span class="timestamp-wrapper"><span class="timestamp">&lt;2023-02-06 Mon&gt;</span></span>) they're still a bit buggy.
 </p>
@@ -1039,11 +1039,16 @@ Workaround: run <code>M-x org-indent-indent-buffer</code> manually</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org72bb2ae" class="outline-3">
-<h3 id="org72bb2ae">Configurations</h3>
-<div class="outline-text-3" id="text-org72bb2ae">
+<div id="outline-container-orgbf7f3e1" class="outline-3">
+<h3 id="orgbf7f3e1">Configurations</h3>
+<div class="outline-text-3" id="text-orgbf7f3e1">
 <p>
 Disable leading indentation to ensure <code>beginning-of-defun</code> and <code>end-of-defun</code> works properly. This ensures important SLIME functions (e.g. <code>slime-compile-defun</code>) work properly.
+Local Variables:
+org-edit-src-content-indentation: 0
+org-adapt-indentation: nil
+org-export-use-babel: nil
+End:
 </p>
 </div>
 </div>
@@ -1051,7 +1056,7 @@ Disable leading indentation to ensure <code>beginning-of-defun</code> and <code>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Hong Qiantan</p>
-<p class="date">Created: 2023-02-06 Mon 13:52</p>
+<p class="date">Created: 2023-02-06 Mon 14:04</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
