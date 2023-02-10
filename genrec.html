@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-02-06 Mon 14:04 -->
+<!-- 2023-02-09 Thu 23:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>GENREC</title>
@@ -15,7 +15,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
-<style>pre.example::before{content:"⇒ ";} </style>
+<style> .example{margin-top:-24px;border-top:none;}</style>
+<style> pre.src{white-space:pre-wrap;}</style>
 </head>
 <body>
 <div id="content" class="content">
@@ -24,73 +25,128 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org18d5b82">Implementation</a>
+<li><a href="#org358dacb">1. Introduction</a>
 <ul>
-<li><a href="#orgf16f836">Utilities</a></li>
-<li><a href="#orgf6206f6">Type utilities</a>
-<ul>
-<li><a href="#org9718cd0">Convenient ADT definition</a></li>
+<li><a href="#orge36ea8f">1.1. Getting Started</a></li>
+<li><a href="#org2f18670">1.2. Synthesis Technique</a></li>
 </ul>
 </li>
-<li><a href="#orgf6826b5">Hole-terms</a></li>
-<li><a href="#orgdb08003">Skeleton Language</a>
+<li><a href="#org726d002">2. Implementation</a>
 <ul>
-<li><a href="#org1ff6b29">Code Generator Debugging</a></li>
-<li><a href="#org7b414f8">Resource Limit Helpers</a></li>
-<li><a href="#org64e548e">PFUN definition</a></li>
+<li><a href="#orgd0ae9e7">2.1. Utilities</a></li>
+<li><a href="#org4d0ff05">2.2. Type utilities</a>
+<ul>
+<li><a href="#orgf7a09d4">2.2.1. Convenient ADT definition</a></li>
 </ul>
 </li>
-<li><a href="#org8483f4a">Skeleton Generators</a>
+<li><a href="#orgd8e606f">2.3. Hole-terms</a>
 <ul>
-<li><a href="#org59950ee">Single-dispatch function population</a></li>
-<li><a href="#org74e7b57">Paramorphism</a></li>
+<li><a href="#org8d50269">2.3.1. Chain of closure compiler for hole-terms</a></li>
 </ul>
 </li>
-<li><a href="#org22efc97">Search operators</a></li>
-<li><a href="#orgfc8d581">Search algorithm</a></li>
-<li><a href="#org2cc77e5">Profiling</a></li>
-<li><a href="#org7e5522f">Test Generation</a></li>
-<li><a href="#orgb87c72a">Built-in Types</a></li>
-<li><a href="#org65a86d5">Convience</a></li>
+<li><a href="#org1032f62">2.4. Skeleton Language</a>
+<ul>
+<li><a href="#org2f199fe">2.4.1. Resource Limit Helpers</a></li>
+<li><a href="#orgdfa02e2">2.4.2. Skeleton definition</a></li>
 </ul>
 </li>
-<li><a href="#org97440f1">Emacs Support</a>
+<li><a href="#orgdcd608e">2.5. Skeleton Generators</a>
 <ul>
-<li><a href="#org5e40a8c">Notes</a></li>
-<li><a href="#orgbf7f3e1">Configurations</a></li>
+<li><a href="#orgcb219da">2.5.1. Code Generator Debugging</a></li>
+<li><a href="#org437865e">2.5.2. Single-dispatch function population</a></li>
+<li><a href="#org8bf056b">2.5.3. Paramorphism</a></li>
+</ul>
+</li>
+<li><a href="#org4cf6a64">2.6. Search operators</a></li>
+<li><a href="#orgaba670a">2.7. Search algorithm</a></li>
+<li><a href="#org0ccf203">2.8. Profiling</a></li>
+<li><a href="#org4ba2742">2.9. Test Generation</a></li>
+<li><a href="#org5b04c31">2.10. Built-in Types</a></li>
+<li><a href="#org049f3df">2.11. Convience</a></li>
+</ul>
+</li>
+<li><a href="#orgcdf2959">3. Experiments</a>
+<ul>
+<li><a href="#org3497d01">3.1. Natural Numbers</a></li>
+<li><a href="#orgf77b196">3.2. Lambda Calculus (de Brujin index)</a></li>
+</ul>
+</li>
+<li><a href="#org7e0dca4">4. Emacs Support</a>
+<ul>
+<li><a href="#org6118029">4.1. Notes</a></li>
+<li><a href="#orge59dc51">4.2. Configurations</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org18d5b82" class="outline-2">
-<h2 id="org18d5b82">Implementation</h2>
-<div class="outline-text-2" id="text-org18d5b82">
+<div id="outline-container-org358dacb" class="outline-2">
+<h2 id="org358dacb"><span class="section-number-2">1.</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+GENREC is a research project that explores stochastic synthesis techniques for general recursive programs.
+</p>
+
+<p>
+We are currently focusing on the problem of synthesizing language semantics from examples.
+</p>
+</div>
+<div id="outline-container-orge36ea8f" class="outline-3">
+<h3 id="orge36ea8f"><span class="section-number-3">1.1.</span> Getting Started</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+GENREC is being developed in <a href="https://en.wikipedia.org/wiki/Literate_Programming">Literate Programming</a> style. This Org document serves as both the implementation and the central knowledge repository for the project. To get started, you should get familiar with <a href="https://orgmode.org">Org Mode</a> and <a href="https://en.wikipedia.org/wiki/Common_Lisp">Common Lisp</a>. Nowadays people recommend <a href="https://lispcookbook.github.io/cl-cookbook/">The Common Lisp Cookbook</a>, read through the sections <a href="https://lispcookbook.github.io/cl-cookbook/functions.html">Functions</a>, <a href="https://lispcookbook.github.io/cl-cookbook/data-structures.html">Data Structures</a> and <a href="https://lispcookbook.github.io/cl-cookbook/macros.html">Macros and Backquote</a> and you should be in good position to understand GENREC code. If you encounter some functions/special forms you don't understand, first try search in <a href="http://clhs.lisp.se/Front/index.htm">Common Lisp Hyper Spec</a> (use Google or <code>M-x slime-hyperspec-lookup</code>) in case it's in CL standard. If that's not the case, <code>M-x xref-find-definitions</code> (usually bound to key <code>M-.</code>) will bring you to its source, and typically Lisp source code are well-documented. You can then start to explore this Org document. This Org document is supposed to be readable &#x2013; if you find anything difficult to understand, this is considered a bug! Report to someone in charge.
+</p>
+<ul class="org-ul">
+<li><p>
+tip: I highly recommend you to compile and install your own SBCL from source. See <a href="https://www.sbcl.org/getting.html#compile">Compiling SBCL from Source</a>.
+</p>
+
+<p>
+This makes the source code for your whole Lisp environment (including the build system, the compiler and the VM itself!) available at runtime and you can <code>M-.</code> into it. I'm not sure how useful this is for newbies &#x2013; but I personally find it incredible useful to trouble shoot anything wrong coming from the underlying environment, or if I want to explore and modify the Lisp environment, e.g. for performance reason.
+</p></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2f18670" class="outline-3">
+<h3 id="org2f18670"><span class="section-number-3">1.2.</span> Synthesis Technique</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+We stratify the target program to be synthesized into two parts: A fixed skeleton with holes, and a set of hole-terms that completes the skeleton. We then use stochastic search to find hole-term assignments. The skeleton can use arbitrary Lisp, plus a few macros we provided to define holes. Hole-terms use a restricted grammar so that effective stochastic search is possible.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org726d002" class="outline-2">
+<h2 id="org726d002"><span class="section-number-2">2.</span> Implementation</h2>
+<div class="outline-text-2" id="text-2">
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defpackage</span> <span style="color: #7070a0;">#:genrec</span>
-  (<span style="color: #7070a0;">:use</span> <span style="color: #7070a0;">#:cl</span> <span style="color: #7070a0;">#:iter</span> <span style="color: #7070a0;">#:sb-cltl2</span>)
-  (<span style="color: #7070a0;">:export</span> <span style="color: #7070a0;">#:arg-types</span> <span style="color: #7070a0;">#:accessors</span> <span style="color: #7070a0;">#:constructors</span> <span style="color: #7070a0;">#:define-adt</span>
-           <span style="color: #7070a0;">#:hole</span> <span style="color: #7070a0;">#:with-tryables</span> <span style="color: #7070a0;">#:register-tryable-function</span> <span style="color: #7070a0;">#:with-pfun</span>
-           <span style="color: #7070a0;">#:dispatcher</span> <span style="color: #7070a0;">#:population-pfun</span> <span style="color: #7070a0;">#:para-pfun</span>
-           <span style="color: #7070a0;">#:solve-pfun</span>
-           <span style="color: #7070a0;">#:list-of</span> <span style="color: #7070a0;">#:boolean</span> <span style="color: #7070a0;">#:nat</span> <span style="color: #7070a0;">#:tuple</span>
-           <span style="color: #7070a0;">#:defproblem</span>)
-  (<span style="color: #7070a0;">:shadowing-import-from</span> <span style="color: #7070a0;">#:metabang-bind</span> <span style="color: #7070a0;">#:bind</span>)
-  (<span style="color: #7070a0;">:local-nicknames</span> (<span style="color: #7070a0;">#:a</span> <span style="color: #7070a0;">#:alexandria</span>) (<span style="color: #7070a0;">#:t</span> <span style="color: #7070a0;">#:trivia</span>) (<span style="color: #7070a0;">#:s</span> <span style="color: #7070a0;">#:serapeum</span>)))
-(<span style="color: #7070a0;">in-package</span> <span style="color: #7070a0;">#:genrec</span>)
+<pre class="src src-lisp">(<span class="org-keyword">defpackage</span> <span class="org-builtin">#:genrec</span>
+  (<span class="org-builtin">:use</span> <span class="org-builtin">#:cl</span> <span class="org-builtin">#:iter</span> <span class="org-builtin">#:sb-cltl2</span> <span class="org-builtin">#:alexandria</span>)
+  (<span class="org-builtin">:export</span> <span class="org-builtin">#:arg-types</span> <span class="org-builtin">#:accessors</span> <span class="org-builtin">#:constructors</span> <span class="org-builtin">#:define-adt</span>
+           <span class="org-builtin">#:hole</span> <span class="org-builtin">#:with-tryables</span> <span class="org-builtin">#:register-tryable-function</span> <span class="org-builtin">#:with-skeleton</span>
+           <span class="org-builtin">#:dispatcher</span> <span class="org-builtin">#:population-skeleton</span> <span class="org-builtin">#:para-skeleton</span>
+           <span class="org-builtin">#:solve-skeleton</span>
+           <span class="org-builtin">#:list-of</span> <span class="org-builtin">#:boolean</span> <span class="org-builtin">#:nat</span> <span class="org-builtin">#:tuple</span>
+           <span class="org-builtin">#:defproblem</span>)
+  (<span class="org-builtin">:shadowing-import-from</span> <span class="org-builtin">#:metabang-bind</span> <span class="org-builtin">#:bind</span>)
+  (<span class="org-builtin">:local-nicknames</span> (<span class="org-builtin">#:t</span> <span class="org-builtin">#:trivia</span>) (<span class="org-builtin">#:s</span> <span class="org-builtin">#:serapeum</span>)))
+(<span class="org-keyword">in-package</span> <span class="org-builtin">#:genrec</span>)
 </pre>
 </div>
 </div>
-<div id="outline-container-orgf16f836" class="outline-3">
-<h3 id="orgf16f836">Utilities</h3>
-<div class="outline-text-3" id="text-orgf16f836">
+<div id="outline-container-orgd0ae9e7" class="outline-3">
+<h3 id="orgd0ae9e7"><span class="section-number-3">2.1.</span> Utilities</h3>
+<div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">klet</span> (((name arglist <span style="color: #7070a0;">&amp;body</span> cont)) <span style="color: #7070a0;">&amp;body</span> body)
-  <span style="color: #FF4FA4;">"Stack-allocate a continuation function during evaluation of BODY."</span>
-  `(<span style="color: #7070a0;">flet</span> ((,name ,arglist . ,cont))
-     (<span style="color: #7070a0;">declare</span> (dynamic-extent #',name)
+<pre class="src src-lisp">(<span class="org-keyword">defmacro</span> <span class="org-function-name">klet</span> (((name arglist <span class="org-builtin">&amp;body</span> cont)) <span class="org-builtin">&amp;body</span> body)
+  <span class="org-doc">"Stack-allocate a continuation function during evaluation of BODY."</span>
+  `(<span class="org-keyword">flet</span> ((,name ,arglist . ,cont))
+     (<span class="org-keyword">declare</span> (dynamic-extent #',name)
               (inline ,name))
      . ,body))
+(s:defsubst compile-lambda (expression)
+  (compile nil expression))
 </pre>
 </div>
 
@@ -98,46 +154,69 @@
 Misc CL types:
 </p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">return-type</span> (type)
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">return-type</span> (type)
   (t:ematch type ((list 'function _ s-type) s-type)))
-(<span style="color: #7070a0;">deftype</span> <span style="color: #000000;">mem</span> () '(simple-array t 1))
+(<span class="org-keyword">deftype</span> <span class="org-type">mem</span> () '(simple-array t 1))
 </pre>
 </div>
 
+<p>
+Simple memoization macro, we use memoization a lot. The comparison is done by <code>equal</code> predicate on the argument list. Currently, only simple argument list is supported (no <code>&amp;optional &amp;rest &amp;key</code> etc). If we ever switch to hash-consing in the future, we may re-implement this memoization macro to boost performance.
+</p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">function-memo</span> (name <span style="color: #7070a0;">&amp;rest</span> args)
+<pre class="src src-lisp">(<span class="org-keyword">defmacro</span> <span class="org-function-name">function-memo</span> (name <span class="org-builtin">&amp;rest</span> args)
   `(gethash ',args (get ',name 'memo-table)))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">define-memo-function</span> (name args <span style="color: #7070a0;">&amp;body</span> body)
-  (bind (((<span style="color: #7070a0;">:values</span> body decls doc) (a:parse-body body <span style="color: #7070a0;">:documentation</span> t)))
-    `(<span style="color: #7070a0;">let</span> ((memo-table (<span style="color: #7070a0;">setf</span> (get ',name 'memo-table) (make-hash-table <span style="color: #7070a0;">:test</span> 'equal <span style="color: #7070a0;">:synchronized</span> t))))
-       (<span style="color: #7070a0;">defun</span> ,name ,args
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">define-memo-function</span> (name args <span class="org-builtin">&amp;body</span> body)
+  (bind (((<span class="org-builtin">:values</span> body decls doc) (parse-body body <span class="org-builtin">:documentation</span> t)))
+    `(<span class="org-keyword">let</span> ((memo-table (make-hash-table <span class="org-builtin">:test</span> 'equal <span class="org-builtin">:synchronized</span> t)))
+       (<span class="org-keyword">setf</span> (get ',name 'memo-table) memo-table)
+       (<span class="org-keyword">defun</span> ,name ,args
          ,doc ,@decls
-         (<span style="color: #7070a0;">multiple-value-bind</span> (memo-value memo-p) (gethash (list ,@args) memo-table)
-           (<span style="color: #7070a0;">if</span> memo-p memo-value
-               (<span style="color: #7070a0;">setf</span> (gethash (list ,@args) memo-table) (<span style="color: #7070a0;">locally</span> ,@body))))))))
-(<span style="color: #7070a0;">eval-when</span> (<span style="color: #7070a0;">:compile-toplevel</span> <span style="color: #7070a0;">:load-toplevel</span> <span style="color: #7070a0;">:execute</span>) (<span style="color: #7070a0;">setf</span> iterate::*always-declare-variables* t))
+         (ensure-gethash (list ,@args) memo-table (<span class="org-keyword">locally</span> ,@body))))))
 </pre>
 </div>
+
+<p>
+Make <code>iter</code> macros generate type declarations to get some free performance benefit.
+</p>
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">eval-when</span> (<span class="org-builtin">:compile-toplevel</span> <span class="org-builtin">:load-toplevel</span> <span class="org-builtin">:execute</span>)
+  (<span class="org-keyword">setf</span> iterate::*always-declare-variables* t))
+</pre>
+</div>
+
+<div class="inlinetask">
+<b><span class="todo TODO">TODO</span> Hash-consing</b><br />
+<p>
+We manipuate terms a lot. Will switching to hash-consing boost performance?
+</p>
 </div>
 </div>
-<div id="outline-container-orgf6206f6" class="outline-3">
-<h3 id="orgf6206f6">Type utilities</h3>
-<div class="outline-text-3" id="text-orgf6206f6">
+</div>
+<div id="outline-container-org4d0ff05" class="outline-3">
+<h3 id="org4d0ff05"><span class="section-number-3">2.2.</span> Type utilities</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 Here we have a poor man's polymorphic type system:
 </p>
 <ul class="org-ul">
 <li>A <i>type</i> can be either a symbol (e.g. <code>nat</code>) or a list (e.g. <code>(list-of nat)</code>)</li>
-<li>A type has some <i>constructors</i>. This is either the type's (if it's a symbol) or its <code>car</code>'s (if it's a list) <code>'constructors</code> symbol property.</li>
-<li>A constructor (always a symbol) has some <i>accessors</i>.
-A constructor is called to make an object if it's defined to be a function, e.g. <code>cons</code>. Otherwise it's regarded as a constant and stand for itself, e.g. <code>nil</code>.</li>
 <li><p>
-Given a <code>constructor</code> and the expected <code>result-type</code>, <code>arg-types</code> compute the expected list of argument type. This allow us to do some polymorphism, e.g.
+A type has some <i>constructors</i>. This is either the type's (if it's a symbol) or its <code>car</code>'s (if it's a list) <code>'constructors</code> symbol property.
+</p>
+
+<p>
+A constructor (always a symbol) is called to make an object if it's defined to be a function, e.g. <code>cons</code>. Otherwise it's regarded as a constant and stand for itself, e.g. <code>nil</code>.
+</p></li>
+<li>A constructor has some <i>accessors</i> to access its fields.</li>
+<li><p>
+Given a constructor and the expected <code>result-type</code>, <code>arg-types</code> compute the expected list of argument type. This allow us to do some polymorphism, e.g.
 </p>
 <div class="org-src-container">
 <pre class="src src-lisp">(arg-types 'cons '(list-of nat))
 </pre>
 </div>
+
 <pre class="example">
 (NAT (LIST-OF NAT))
 </pre></li>
@@ -146,23 +225,45 @@ Given a <code>constructor</code> and the expected <code>result-type</code>, <cod
 Theses mechanisms for constructors  are also used for our handling of library functions, so that e.g. <code>nth</code> works on <code>(list-of *)</code> for any <code>*</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">constructors</span> (type)
-  (append (<span style="color: #7070a0;">when</span> (consp type) (constructors (car type)))
-          (<span style="color: #7070a0;">when</span> (symbolp type) (get type 'constructors))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">accessors</span> (c) (get c 'accessors))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">arg-types</span> (f result-type)
-  (<span style="color: #7070a0;">if</span> (functionp (get f 'arg-types))
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">constructors</span> (type)
+  (append (<span class="org-keyword">when</span> (consp type) (constructors (car type)))
+          (<span class="org-keyword">when</span> (symbolp type) (get type 'constructors))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">accessors</span> (c) (get c 'accessors))
+(<span class="org-keyword">defun</span> <span class="org-function-name">arg-types</span> (f result-type)
+  (<span class="org-keyword">if</span> (functionp (get f 'arg-types))
       (funcall (get f 'arg-types) result-type)
       (get f 'arg-types)))
-(<span style="color: #7070a0;">defun</span> (<span style="color: #7070a0;">setf</span> constructors) (new-val type)
-  (<span style="color: #FF4FA4;">assert</span> (symbolp type))
-  (<span style="color: #7070a0;">setf</span> (get type 'constructors) new-val))
+(<span class="org-keyword">defun</span> (<span class="org-keyword">setf</span> constructors) (new-val type)
+  (<span class="org-warning">assert</span> (symbolp type))
+  (<span class="org-keyword">setf</span> (get type 'constructors) new-val))
+</pre>
+</div>
 
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">recursive-p</span> (c type) (find type (arg-types c type) <span style="color: #7070a0;">:test</span> 'equal))
-(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*library-table*</span> (make-hash-table <span style="color: #7070a0;">:test</span> 'equal)
-  <span style="color: #FF4FA4;">"Map return types to lists of library functions."</span>)
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">library-functions</span> (type)
-  (append (<span style="color: #7070a0;">when</span> (consp type) (library-functions (car type)))
+<p>
+A constructor is <i>recursive</i> if one of its argument type is the same as itself. In a few cases we test and treat recursive types specially.
+</p>
+<div class="inlinetask">
+<b><span class="todo TODO">TODO</span> Clarify and think about where and why we treat recursive type specially.</b><br />
+nil</div>
+<div class="inlinetask">
+<b><span class="todo TODO">TODO</span> Does the current practice work well for mutually recursive type?</b><br />
+nil</div>
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">recursive-p</span> (c result-type)
+  (find result-type (arg-types c result-type) <span class="org-builtin">:test</span> 'equal))
+</pre>
+</div>
+
+<p>
+We index library functions according to return type, so that <code>generate-mutations</code> can retrieve them efficiently using helper <code>library-functions</code>. It's similar to <code>constructors</code>. To locally add some library function, dynamically bind <code>*library-table*</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">defvar</span> <span class="org-variable-name">*library-table*</span> (make-hash-table <span class="org-builtin">:test</span> 'equal)
+  <span class="org-doc">"Map return types to lists of library functions."</span>)
+(<span class="org-keyword">defun</span> <span class="org-function-name">library-functions</span> (result-type)
+  <span class="org-doc">"Return the list of library functions that returns RESULT-TYPE."</span>
+  (append (<span class="org-keyword">when</span> (consp result-type)
+            (library-functions (car result-type)))
           (gethash type *library-table*)))
 </pre>
 </div>
@@ -175,66 +276,80 @@ For a fully specialized type, each constructor should construct runtime value of
 <li>For ADTs defined as the union of several product (i.e. CL struct) type, each constructor construct the corresponding CL struct.</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">constructor-&gt;cl-type</span> (c)
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">constructor-&gt;cl-type</span> (c)
   (or (get c 'cl-type)
-      (<span style="color: #7070a0;">if</span> (function-information c)  c `(eql ,c))))
+      (<span class="org-keyword">if</span> (function-information c)  c `(eql ,c))))
 </pre>
 </div>
 <p>
-See <a href="#orgb87c72a">Built-in Types</a> for some example of using this low level interface. If polymorphism is not needed, we recommend using <code>define-adt</code>.
+See <a href="#org5b04c31">2.10</a> for some examples of using this low level interface. If polymorphism is not needed, we recommend using <code>define-adt</code>.
 </p>
 
 <p>
-Compute default hole-term and value:
+When we pick initial hole-terms for a search, or construct new application in a hole-term, we need to fill in some default hole-term with a given type, if no better option is available. Default value for a type is used in <code>value-size</code> and <code>edit-distance</code>. The following computes default hole-term and value:
 </p>
+<div class="inlinetask">
+<b><span class="todo TODO">TODO</span> The match our new <code>generate-mutations</code> algorithm, the right thing for <code>value-size</code> and <code>edit-distance</code> to do is to test for non-recursive base cases rather than comparing to <code>default-value</code>. Correct this!</b><br />
+nil</div>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">define-memo-function</span> min-constructor (type)
-  (<span style="color: #7070a0;">let</span> ((cs (sort (remove-if (<span style="color: #7070a0;">lambda</span> (c) (recursive-p c type)) (constructors type))
-                  #'&lt; <span style="color: #7070a0;">:key</span> (<span style="color: #7070a0;">lambda</span> (c) (length (arg-types c type))))))
-    (<span style="color: #FF4FA4;">assert</span> cs)
+<pre class="src src-lisp">(<span class="org-keyword">define-memo-function</span> min-constructor (type)
+  <span class="org-string">"The non-recursive constructor of TYPE with smallest arity."</span>
+  (<span class="org-keyword">let</span> ((cs (sort (remove-if (<span class="org-keyword">lambda</span> (c) (recursive-p c type))
+                             (constructors type))
+                  #'&lt; <span class="org-builtin">:key</span> (<span class="org-keyword">lambda</span> (c) (length (arg-types c type))))))
+    (<span class="org-keyword">unless</span> cs
+      (<span class="org-warning">error</span> <span class="org-string">"Type ~a has no non-recursive base case!"</span> type))
     (car cs)))
-(<span style="color: #7070a0;">define-memo-function</span> default-term (type)
-  (<span style="color: #7070a0;">let</span> ((minc (min-constructor type)))
+(<span class="org-keyword">define-memo-function</span> default-term (type)
+  (<span class="org-keyword">let</span> ((minc (min-constructor type)))
     (cons minc (mapcar #'default-term (arg-types minc type)))))
-(<span style="color: #7070a0;">define-memo-function</span> default-value (type)
-  (<span style="color: #7070a0;">let</span> ((minc (min-constructor type)))
-    (<span style="color: #7070a0;">if</span> (fboundp minc)
+(<span class="org-keyword">define-memo-function</span> default-value (type)
+  (<span class="org-keyword">let</span> ((minc (min-constructor type)))
+    (<span class="org-keyword">if</span> (fboundp minc)
         (apply minc (mapcar #'default-value (arg-types minc type)))
         minc)))
 </pre>
 </div>
 </div>
-<div id="outline-container-org9718cd0" class="outline-4">
-<h4 id="org9718cd0">Convenient ADT definition</h4>
-<div class="outline-text-4" id="text-org9718cd0">
+<div id="outline-container-orgf7a09d4" class="outline-4">
+<h4 id="orgf7a09d4"><span class="section-number-4">2.2.1.</span> Convenient ADT definition</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+See <a href="#orgf77b196">3.2</a> for an example.
+</p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">define-adt</span> (name <span style="color: #7070a0;">&amp;body</span> constructors)
-  (<span style="color: #7070a0;">setq</span> constructors (mapcar (<span style="color: #7070a0;">lambda</span> (clause) (<span style="color: #7070a0;">if</span> (consp clause) clause (list clause))) constructors))
-  `(s:eval-always
-     ,@ (mapcar
+<pre class="src src-lisp">(<span class="org-keyword">defmacro</span> <span class="org-function-name">define-adt</span> (name <span class="org-builtin">&amp;body</span> constructors)
+  `(<span class="org-keyword">progn</span>
+     ,@(mapcar
          (t:lambda-match1 (list* c args)
-           (<span style="color: #7070a0;">when</span> args
-             `(<span style="color: #7070a0;">defstruct</span> (,c (<span style="color: #7070a0;">:constructor</span> ,c ,(mapcar #'car args)))
-                ,@(mapcar
-                   (t:lambda-match1 (list field type)
-                     `(,field (<span style="color: #FF4FA4;">error</span> <span style="color: #FF4FA4;">"Unprovided"</span>) <span style="color: #7070a0;">:type</span> ,type))
-                   args))))
+           (<span class="org-keyword">when</span> args
+             `(<span class="org-keyword">defstruct</span> (,c (<span class="org-builtin">:constructor</span> ,c ,(mapcar #'car args)))
+                ,@(mapcar #'car args))))
          constructors)
-     (<span style="color: #7070a0;">deftype</span> ,name () '(or ,@(mapcar #'car constructors)))
-     (<span style="color: #7070a0;">setf</span> (constructors ',name) ',(mapcar #'car constructors)
-           ,@(mapcan (t:lambda-match1 (list* c args)
-                       `((get ',c 'arg-types) ',(mapcar #'cadr args)
-                         (get ',c 'accessors)
-                         ',(mapcar (<span style="color: #7070a0;">lambda</span> (arg) (intern (format nil <span style="color: #FF4FA4;">"~a-~a"</span> c (car arg)))) args)))
-                     constructors))))
+     (<span class="org-keyword">deftype</span> ,name () '(or ,@(mapcar #'car constructors)))
+
+     ,@(mapcar (t:lambda-match1 (list* c args)
+                  (bind ((fields (mapcar #'car args))
+                         (types (mapcar #'cadr args))
+                         (accessors
+                          (mapcar (<span class="org-keyword">lambda</span> (f) (symbolicate c <span class="org-string">"-"</span> f)) fields)))
+                    `(<span class="org-keyword">progn</span>
+                       (<span class="org-keyword">declaim</span>
+                        ,@(mapcar
+                           (<span class="org-keyword">lambda</span> (a type) `(ftype (function (,c) ,type) ,a))
+                           accessors types))
+                       (<span class="org-keyword">setf</span> (get ',c 'arg-types) ',types
+                             (get ',c 'accessors) ',accessors))))
+                constructors)
+     (<span class="org-keyword">setf</span> (constructors ',name) ',(mapcar #'car constructors))))
 </pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf6826b5" class="outline-3">
-<h3 id="orgf6826b5">Hole-terms</h3>
-<div class="outline-text-3" id="text-orgf6826b5">
+<div id="outline-container-orgd8e606f" class="outline-3">
+<h3 id="orgd8e606f"><span class="section-number-3">2.3.</span> Hole-terms</h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
 <i>Hole-terms</i> are basically a first-order subset of regular lisp, with only function applications and special <code>(tryable n)</code> forms.
 </p>
@@ -243,71 +358,255 @@ Compute default hole-term and value:
 </ul>
 
 <p>
-The following is a simple "compiler" that translate a hole term into an <i>execution procedure</i> (chain of closures).
+We use a simple "compiler" that translate a hole-term into an <i>execution procedure</i> (chain of closures).
 </p>
 <ul class="org-ul">
-<li>An execution procedure is a callable function.
-When called with a single argument (the vector of tryable values), return the value represented by the source hole term.</li>
+<li><p>
+An execution procedure is a callable function.
+</p>
+
+<p>
+When called with a single argument (the vector of tryable values), it returns the value represented by the source hole-term.
+</p></li>
 </ul>
+
+<p>
+The reason we have this simple compiler is that interpreting hole-terms at evaluation time is slow, but SBCL compiler is super slow so we can't afford to generate Lisp code and call <code>compile</code> for every hole-term.
+</p>
+<div class="inlinetask">
+<b><span class="todo TODO">TODO</span> Explore machine code generator for hole-terms</b><br />
+<p>
+Maybe try SBCL's assembler <code>sb-assem</code>
+</p>
+<ul class="org-ul">
+<li><a href="https://pvk.ca/Blog/2014/03/15/sbcl-the-ultimate-assembly-code-breadboard/">SBCL: the ultimate assembly code breadboard</a></li>
+</ul>
+
+<p>
+&#x2026; or Clozure CL's LAP (lisp assembly program)
+</p>
+
+<ul class="org-ul">
+<li>在 Clozure Common Lisp 中使用汇编 (in Chinese)
+<ul class="org-ul">
+<li><a href="https://xfy.vercel.app/posts/write-assembly-code-in-ccl/">编写 LAP 代码</a></li>
+<li><a href="https://xfy.vercel.app/posts/debug-ccl-using-gdb/">使用 GDB 调试</a></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8d50269" class="outline-4">
+<h4 id="org8d50269"><span class="section-number-4">2.3.1.</span> Chain of closure compiler for hole-terms</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+<code>make-cons-procedure</code> is a helper to construct execution procedures that apply a function to a list of mixed static and dynamic arguments. This remove the overhead to create and call trivial constant procedures (of the form <code>(lambda (mem)</code> <i>some-constant</i> <code>)</code>) for every constant terms. Instead, the static constants are embedded in the caller execution procedure. I deem this worthy because we have plenty of use of <code>0</code>'s and <code>nil</code>'s etc, but we won't ever (I think) use a large set of distinct constant.
+</p>
+
+<p>
+The canonical example use: <code>(funcall (make-cons-procedure f '(t nil nil))</code> <i>execution-procedure<sub>1</sub></i> <i>constant<sub>1</sub></i> <i>constant<sub>2</sub></i>​<code>)</code> gives something equivalent to <code>(lambda (mem) (f (funcall</code> <i>execution-procedure<sub>1</sub></i> <code>mem)</code> <i>constant<sub>1</sub></i> <i>constant<sub>2</sub></i>​<code>))</code>, with <i>execution-procedure<sub>1</sub></i> <i>constant<sub>1</sub></i> and <i>constant<sub>2</sub></i> closed in closures variables.
+</p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">named-lambda</span> (name args <span style="color: #7070a0;">&amp;body</span> body)
-  <span style="color: #FF4FA4;">"For better readability when using e.g. `</span><span style="color: #000000;">sb-sprof</span><span style="color: #FF4FA4;">' profiler."</span>
-  `(<span style="color: #7070a0;">labels</span> ((,name ,args ,@body)) #',name))
-(<span style="color: #7070a0;">define-memo-function</span> make-cons-procedure (f dynamic-p-list)
-  <span style="color: #FF4FA4;">"Partially specialize F.</span>
-<span style="color: #FF4FA4;">DYNAMIC-P-LIST is a list of booleans specifying whether the corresponding argument to F will be dynamic (a execution procedure) or static (a value). Return a function that when applied to a mix of dynamic and static arguments, return an execution procedure."</span>
-  (<span style="color: #7070a0;">if</span> (fboundp f)
-      (<span style="color: #7070a0;">if</span> (or (some #'identity dynamic-p-list)
-              <span style="color: #7070a0; font-style: italic;">;; </span><span style="color: #7070a0; font-style: italic;">recognize pfun local functions</span>
+<pre class="src src-lisp">(<span class="org-keyword">define-memo-function</span> make-cons-procedure (f dynamic-p-list)
+  <span class="org-string">"Partially specialize F according to DYNAMIC-P-LIST."</span>
+  (<span class="org-keyword">if</span> (fboundp f)
+      (<span class="org-keyword">if</span> (or (some #'identity dynamic-p-list)
+              <span class="org-comment-delimiter">;; </span><span class="org-comment">recognize skeleton local functions</span>
               (not (symbol-package f)))
-          (<span style="color: #7070a0;">let</span> ((args (iter (for i below (length dynamic-p-list))
-                        (collect (intern (format nil <span style="color: #FF4FA4;">"ARG-~a"</span> i))))))
-            (compile nil `(<span style="color: #7070a0;">lambda</span> ,args
-                            (<span style="color: #7070a0;">lambda</span> (mem)
-                              (<span style="color: #7070a0;">declare</span> (optimize (speed 3) <span style="color: #7070a0; font-style: italic;">#+nil (safety 0)</span>))
-                              (,f ,@ (iter (for dynamic-p in dynamic-p-list)
-                                       (for arg in args)
-                                       (collect (<span style="color: #7070a0;">if</span> dynamic-p `(funcall (<span style="color: #7070a0;">the</span> function ,arg) mem) arg))))))))
+          (<span class="org-keyword">let</span> ((*gensym-counter* 0)
+                (args (make-gensym-list (length dynamic-p-list) <span class="org-string">"ARG-"</span>)))
+            (compile-lambda
+             `(<span class="org-keyword">lambda</span> ,args
+                (<span class="org-keyword">lambda</span> (mem)
+                  (<span class="org-keyword">declare</span> (optimize (speed 3) <span class="org-slime-reader-conditional">#+nil (safety 0)</span>))
+                  (,f ,@(mapcar
+                         (<span class="org-keyword">lambda</span> (dynamic-p arg)
+                           (<span class="org-keyword">if</span> dynamic-p
+                               `(funcall (<span class="org-keyword">the</span> function ,arg) mem)
+                               arg))
+                         dynamic-p-list args))))))
           f)
       (constantly f)))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">term-&gt;procedure</span> (term)
-  <span style="color: #FF4FA4;">"Convert TERM to an executable procedure."</span>
-  (<span style="color: #7070a0;">labels</span> ((process (term)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">term-&gt;procedure</span> (term)
+  <span class="org-doc">"Convert TERM to an executable procedure."</span>
+  (<span class="org-keyword">labels</span> ((process (term)
              (t:match term
                ((list 'succ _)
                 (iter (for i from 1)
-                  (<span style="color: #7070a0;">setq</span> term (cadr term))
-                  (<span style="color: #7070a0;">while</span> (and (consp term) (eq (car term) 'succ)))
+                  (<span class="org-keyword">setq</span> term (cadr term))
+                  (<span class="org-keyword">while</span> (and (consp term) (eq (car term) 'succ)))
                   (finally
-                   (<span style="color: #7070a0;">let</span> ((arg (process term)))
-                     (<span style="color: #7070a0;">return</span>
-                       (<span style="color: #7070a0;">if</span> (functionp arg)
-                           (named-lambda add-procedure (mem) (+ i (funcall arg mem)))
+                   (<span class="org-keyword">let</span> ((arg (process term)))
+                     (<span class="org-keyword">return</span>
+                       (<span class="org-keyword">if</span> (functionp arg)
+                           (named-lambda add-procedure (mem)
+                             (+ i (funcall arg mem)))
                            (+ i arg)))))))
                ((list 'tryable index)
-                (named-lambda tryable-procedure (mem) (svref mem index)))
+                (named-lambda tryable-procedure (mem)
+                  (svref mem index)))
                ((list* op args)
-                (<span style="color: #7070a0;">let</span> ((args (mapcar #'process args)))
-                  (apply (make-cons-procedure op (mapcar #'functionp args)) args))))))
-    (<span style="color: #7070a0;">let</span> ((result (process term)))
-      (<span style="color: #7070a0;">if</span> (functionp result) result
-          (named-lambda const-procedure (mem) (<span style="color: #7070a0;">declare</span> (ignore mem)) result)))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">compile-par</span> (par)
+                (<span class="org-keyword">let</span> ((args (mapcar #'process args)))
+                  (apply
+                   (make-cons-procedure op (mapcar #'functionp args))
+                   args))))))
+    (<span class="org-keyword">let</span> ((result (process term)))
+      (<span class="org-keyword">if</span> (functionp result) result
+          (named-lambda const-procedure (mem)
+            (<span class="org-keyword">declare</span> (ignore mem))
+            result)))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">compile-par</span> (par)
   (map 'vector #'term-&gt;procedure par))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgdb08003" class="outline-3">
-<h3 id="orgdb08003">Skeleton Language</h3>
-<div class="outline-text-3" id="text-orgdb08003">
 </div>
-<div id="outline-container-org1ff6b29" class="outline-4">
-<h4 id="org1ff6b29">Code Generator Debugging</h4>
-<div class="outline-text-4" id="text-org1ff6b29">
+<div id="outline-container-org1032f62" class="outline-3">
+<h3 id="org1032f62"><span class="section-number-3">2.4.</span> Skeleton Language</h3>
+<div class="outline-text-3" id="text-2-4">
+</div>
+<div id="outline-container-org2f199fe" class="outline-4">
+<h4 id="org2f199fe"><span class="section-number-4">2.4.1.</span> Resource Limit Helpers</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">defvar</span> <span class="org-variable-name">*stack-limit*</span>) (<span class="org-keyword">defvar</span> <span class="org-variable-name">*pc*</span>)
+(<span class="org-keyword">defun</span> <span class="org-function-name">call-with-resource-limit</span> (thunk)
+  (<span class="org-keyword">let</span> ((*stack-limit*
+          (- (sb-sys:%primitive sb-c:current-stack-pointer)
+             16384))
+        (*pc* 200))
+    (funcall thunk)))
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">with-resource-limit</span> (<span class="org-builtin">&amp;body</span> body)
+  `(call-with-resource-limit (<span class="org-keyword">lambda</span> () ,@body)))
+(<span class="org-keyword">defun</span> <span class="org-function-name">check-resource-limit</span> ()
+  (decf *pc*)
+  (<span class="org-keyword">unless</span> (and (&gt; *pc* 0)
+               (&gt; (sb-sys:%primitive sb-c:current-stack-pointer)
+                  *stack-limit*))
+    (<span class="org-keyword">throw</span> '<span class="org-constant">cost</span> 1000.0)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdfa02e2" class="outline-4">
+<h4 id="orgdfa02e2"><span class="section-number-4">2.4.2.</span> Skeleton definition</h4>
+<div class="outline-text-4" id="text-2-4-2">
 <p>
-It is very convenient to debug these code generators, such as <code>population-pfun</code>, with SLIME macrostepper (enable SLIME contrib <code>slime-macrostep</code> then <code>macrostep-expand</code>).
+A <i>skeleton</i> is an incomplete procedure that can be evaluated only when <code>*par*</code> is bound to a vector of execution procedures (to make it complete). Use <code>compile-par</code> to compile a sequence of hole-terms into a suitable value for <code>*par*</code>.
 </p>
+<div class="org-src-container">
+<pre class="src src-lisp">(s:defvar-unbound *par* <span class="org-string">"Vector of execution procedures to complete the skeleton being evaluated."</span>)
+(<span class="org-keyword">defstruct</span> <span class="org-type">skeleton</span>
+  (function (<span class="org-warning">error</span> <span class="org-string">"Unprovided."</span>) <span class="org-builtin">:type</span> function)
+  (printer (<span class="org-warning">error</span> <span class="org-string">"Unprovided."</span>) <span class="org-builtin">:type</span> function)
+  (holes (<span class="org-warning">error</span> <span class="org-string">"Unprovided."</span>) <span class="org-builtin">:type</span> list)
+  (type (<span class="org-warning">error</span> <span class="org-string">"Unprovided."</span>))
+  (functions (<span class="org-warning">error</span> <span class="org-string">"Unprovided."</span>) <span class="org-builtin">:type</span> list)
+  (source))
+(<span class="org-keyword">defmethod</span> <span class="org-function-name">print-object</span> ((object skeleton) stream)
+  (format stream <span class="org-string">"#.~a"</span> (skeleton-source object)))
+(<span class="org-keyword">defstruct</span> <span class="org-type">hole</span>
+  (type) (tryable-types))
+(<span class="org-keyword">defmethod</span> <span class="org-function-name">make-load-form</span> ((object hole) <span class="org-builtin">&amp;optional</span> env)
+  (make-load-form-saving-slots object <span class="org-builtin">:environment</span> env))
+(<span class="org-keyword">defun</span> <span class="org-function-name">print-skeleton</span> (skeleton par)
+  (<span class="org-keyword">let</span> ((*print-circle* nil)
+        (*print-gensym* nil))
+    (print (funcall (skeleton-printer skeleton) par))
+    (values)))
+</pre>
+</div>
+
+<p>
+<code>hole</code>, <code>with-tryables</code> and <code>with-skeleton</code> are the main macros for defining SKELETONs.
+</p>
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">defvar</span> <span class="org-variable-name">*holes*</span> (s:vect))
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">*tryable-vars*</span> nil)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">*tryable-types*</span> nil)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">*tryable-functions*</span> nil)
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">hole-1</span> (index <span class="org-builtin">&amp;rest</span> exprs)
+  `(<span class="org-keyword">let</span> ((mem (vector ,@exprs)))
+     (<span class="org-keyword">declare</span> (dynamic-extent mem))
+     (funcall (<span class="org-keyword">the</span> function (svref *par* ,index)) mem)))
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">hole</span> (type)
+  <span class="org-doc">"A hole with TYPE.</span>
+<span class="org-doc">At evaluation time, this computes a value from `</span><span class="org-doc"><span class="org-constant">*par*</span></span><span class="org-doc">' variable and the lexically defined set of tryable expressions. See `</span><span class="org-doc"><span class="org-constant">with-tryables</span></span><span class="org-doc">'."</span>
+  (<span class="org-keyword">prog1</span> `(hole-1 ,(length *holes*) ,@*tryable-vars*)
+    (vector-push-extend
+     (make-hole <span class="org-builtin">:type</span> type <span class="org-builtin">:tryable-types</span> *tryable-types*)
+     *holes*)))
+(<span class="org-keyword">defun</span> <span class="org-function-name">gensym-1</span> (thing)
+  (gensym (coerce
+           (mapcan (<span class="org-keyword">lambda</span> (c)
+                     (<span class="org-keyword">cond</span> ((alpha-char-p c) (list c))
+                           ((alphanumericp c) nil)
+                           (t (list #\-))))
+                   (coerce (format nil <span class="org-string">"~a"</span> thing) 'list))
+           'string)))
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">with-tryables</span> (exprs-and-types <span class="org-builtin">&amp;body</span> body)
+  <span class="org-doc">"EXPRS-AND-TYPES should be of the form ((EXPR TYPE) ...).</span>
+<span class="org-doc">Make EXPR tryable for `</span><span class="org-doc"><span class="org-constant">hole</span></span><span class="org-doc">' forms in BODY."</span>
+  (bind ((exprs (mapcar #'car exprs-and-types))
+         (types (mapcar #'cadr exprs-and-types))
+         (vars (mapcar #'gensym-1 types)))
+    `(<span class="org-keyword">let</span> ,(mapcar #'list vars exprs)
+       (<span class="org-keyword">compiler-let</span>
+           ((*tryable-vars* ',(append vars *tryable-vars*))
+            (*tryable-types* ',(append types *tryable-types*)))
+         ,@body))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">register-tryable-function</span> (name type function)
+  <span class="org-doc">"Register tryable function at code generation time."</span>
+  (t:ematch type
+    ((list 'function arg-types return-type)
+     (<span class="org-keyword">setf</span> (fdefinition name) function)
+     (<span class="org-keyword">setf</span> (get name 'return-type) return-type)
+     (<span class="org-keyword">setf</span> (get name 'arg-types) arg-types)
+     (push name *tryable-functions*)
+     function)))
+(<span class="org-keyword">defun</span> <span class="org-function-name">add-library-function</span> (name return-type)
+  <span class="org-doc">"Add library function to `</span><span class="org-doc"><span class="org-constant">*library-table*</span></span><span class="org-doc">' at evaluation time."</span>
+  (push name (gethash return-type *library-table*)))
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">with-skeleton</span> (<span class="org-builtin">&amp;whole</span> source (type) <span class="org-builtin">&amp;body</span> body)
+  (<span class="org-keyword">let</span> ((holes (s:vect)))
+    `(<span class="org-keyword">compiler-let</span> ((*holes* ,holes))
+       (<span class="org-keyword">let</span> (*tryable-functions*)
+         (make-skeleton <span class="org-builtin">:function</span> (<span class="org-keyword">progn</span> ,@body)
+                    <span class="org-builtin">:holes</span> ,(map 'list #'identity holes)
+                    <span class="org-builtin">:type</span> ',type
+                    <span class="org-builtin">:functions</span> (nreverse *tryable-functions*)
+                    <span class="org-builtin">:printer</span> (<span class="org-keyword">lambda</span> () (<span class="org-warning">error</span> <span class="org-string">"Unimplemented"</span>))
+                    <span class="org-builtin">:source</span> ',source)))))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdcd608e" class="outline-3">
+<h3 id="orgdcd608e"><span class="section-number-3">2.5.</span> Skeleton Generators</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Skeleton generators are written as macros. By convention, we use <code>compiler-let</code> to pass down expected output type via <code>*output-type*</code>, so that skeleton generator macros can do return-type polymorphism. Each skeleton generator macro should also do so for their sub-forms.
+</p>
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">defvar</span> <span class="org-variable-name">*output-type*</span> nil <span class="org-doc">"Intended output type for current macro at code generation time."</span>)
+</pre>
+</div>
+</div>
+<div id="outline-container-orgcb219da" class="outline-4">
+<h4 id="orgcb219da"><span class="section-number-4">2.5.1.</span> Code Generator Debugging</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<p>
+It is very convenient to debug these code generators, such as <code>population-skeleton</code>, with SLIME macrostepper.
+</p>
+<ul class="org-ul">
+<li>To use the macrostepper, install Emacs package <a href="https://melpa.org/#/macrostep"><code>macrostep</code></a> and SLIME will integrate its macroexpander into it (if not, try restart SLIME or Emacs). Then <code>M-x macrostep-expand</code> on the macro form you want to expand.</li>
+</ul>
 
 <p>
 Notes:
@@ -315,294 +614,226 @@ Notes:
 <ul class="org-ul">
 <li>INDEX for <code>hole-1</code> forms are always 0 when expanded using <code>slime-macrostep</code>. Don't worry! they are expanded to correct values by SBCL evaluator.</li>
 </ul>
+
+<p>
+To examine INDEX of holes in the parameter sequence, (e.g. when manually crafting a parameter sequence to test a skeleton), the following helper <code>macroexpand-some</code> let us correctly (more so than <code>slime-macrostep</code>!) expand some macros but retain the rest. We can use it to expand code generator macros and <code>hole</code> forms, but don't expand everything into an low-level unreadable mess.
+</p>
+
+<p>
+<code>macroexpand-some</code> uses a clever hack inspired by <code>slime-macrostep</code>. Note that it's not suffice to call <a href="http://clhs.lisp.se/Body/f_mexp_.htm"><code>macroexpand</code></a> until we reach a form we don't want to expand &#x2013; the arguments of that form might still contain interesting macro forms, but it's not possible to tell whether they are in evaluated positions without extensive analysis. Instead, we use built-in <code>macroexpand-all</code> to expand the original form fully, and in the meantime, use <a href="http://clhs.lisp.se/Body/v_mexp_h.htm"><code>*macroexpand-hook*</code></a> to selectively collect interesting substitutions. We then apply these substitutions ourselves to the original form until fixed-point.
+</p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">macroexpand-some</span> (form macro-symbols <span style="color: #7070a0;">&amp;optional</span> env)
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">macroexpand-some</span> (form predicate <span class="org-builtin">&amp;optional</span> env)
+  <span class="org-doc">"Expand all macro forms in FORM which satisfies PREDICATE."</span>
   (bind ((expansion-alist)
          (*macroexpand-hook*
-          (<span style="color: #7070a0;">lambda</span> (macro-function form env)
-            (<span style="color: #7070a0;">let</span> ((collect-p (member (car form) macro-symbols))
+          (<span class="org-keyword">lambda</span> (macro-function form env)
+            (<span class="org-keyword">let</span> ((collect-p (funcall predicate form))
                   (result (funcall macro-function form env)))
-              (<span style="color: #7070a0;">when</span> collect-p
+              (<span class="org-keyword">when</span> collect-p
                 (push (cons form result) expansion-alist))
               result))))
     (macroexpand-all form env)
-    (<span style="color: #7070a0;">tagbody</span>
+    (<span class="org-keyword">tagbody</span>
      begin
-       (<span style="color: #7070a0;">let</span> ((old-form form))
-         (<span style="color: #7070a0;">setq</span> form (sublis expansion-alist form))
-         (<span style="color: #7070a0;">unless</span> (equal form old-form)
-           (<span style="color: #7070a0;">go</span> begin))))
+       (<span class="org-keyword">let</span> ((old-form form))
+         (<span class="org-keyword">setq</span> form (sublis expansion-alist form))
+         (<span class="org-keyword">unless</span> (equal form old-form)
+           (<span class="org-keyword">go</span> begin))))
     form))
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7b414f8" class="outline-4">
-<h4 id="org7b414f8">Resource Limit Helpers</h4>
-<div class="outline-text-4" id="text-org7b414f8">
-<div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*stack-limit*</span>) (<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*pc*</span>)
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">call-with-resource-limit</span> (thunk)
-  (<span style="color: #7070a0;">let</span> ((*stack-limit*
-          (- (sb-sys:%primitive sb-c:current-stack-pointer)
-             16384))
-        (*pc* 200))
-    (funcall thunk)))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">with-resource-limit</span> (<span style="color: #7070a0;">&amp;body</span> body)
-  `(call-with-resource-limit (<span style="color: #7070a0;">lambda</span> () ,@body)))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">check-resource-limit</span> ()
-  (decf *pc*)
-  (<span style="color: #7070a0;">unless</span> (and (&gt; *pc* 0) (&gt; (sb-sys:%primitive sb-c:current-stack-pointer) *stack-limit*))
-    (<span style="color: #7070a0;">throw</span> '<span style="color: #000000;">cost</span> 1000.0)))
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org64e548e" class="outline-4">
-<h4 id="org64e548e">PFUN definition</h4>
-<div class="outline-text-4" id="text-org64e548e">
-<p>
-A <i>PFUN</i> is a partial function that can be evaluated when <code>*par*</code> is bound to a vector of execution procedures (to make it complete). Use <code>compile-par</code> to compile a sequence of hole-terms to a suitable value for <code>*par*</code>.
-</p>
-<div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*par*</span>)
-(<span style="color: #7070a0;">defstruct</span> <span style="color: #000000;">pfun</span>
-  (function (<span style="color: #FF4FA4;">error</span> <span style="color: #FF4FA4;">"Unprovided."</span>) <span style="color: #7070a0;">:type</span> function)
-  (printer (<span style="color: #FF4FA4;">error</span> <span style="color: #FF4FA4;">"Unprovided."</span>) <span style="color: #7070a0;">:type</span> function)
-  (holes) (type) (functions) (source))
-(<span style="color: #7070a0;">defmethod</span> <span style="color: #000000;">print-object</span> ((object pfun) stream)
-  (format stream <span style="color: #FF4FA4;">"#.~a"</span> (pfun-source object)))
-(<span style="color: #7070a0;">defstruct</span> <span style="color: #000000;">hole</span>
-  (type) (tryable-types))
-(<span style="color: #7070a0;">defmethod</span> <span style="color: #000000;">make-load-form</span> ((object hole) <span style="color: #7070a0;">&amp;optional</span> env)
-  (make-load-form-saving-slots object <span style="color: #7070a0;">:environment</span> env))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">print-pfun</span> (pfun par)
-  (<span style="color: #7070a0;">let</span> ((*print-circle* nil)
-        (*print-gensym* nil))
-    (print (funcall (pfun-printer pfun) par))
-    (values)))
-</pre>
-</div>
-
-<p>
-<code>hole</code>, <code>with-tryables</code> and <code>with-pfun</code> are the main tools for defining PFUNs.
-</p>
-<div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*holes*</span> (s:vect))
-(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*tryable-vars*</span> nil)
-(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*tryable-types*</span> nil)
-(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*tryable-functions*</span> nil)
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">hole-1</span> (index <span style="color: #7070a0;">&amp;rest</span> exprs)
-  `(<span style="color: #7070a0;">let</span> ((mem (vector ,@exprs)))
-     (<span style="color: #7070a0;">declare</span> (dynamic-extent mem))
-     (funcall (<span style="color: #7070a0;">the</span> function (svref *par* ,index)) mem)))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">hole</span> (type)
-  <span style="color: #FF4FA4;">"A hole with TYPE.</span>
-<span style="color: #FF4FA4;">At evaluation time, this computes a value from `</span><span style="color: #000000;">*par*</span><span style="color: #FF4FA4;">' variable and</span>
-<span style="color: #FF4FA4;">the lexically defined set of tryable expressions. See `</span><span style="color: #000000;">with-tryables</span><span style="color: #FF4FA4;">'."</span>
-  (<span style="color: #7070a0;">prog1</span> `(hole-1 ,(length *holes*) ,@*tryable-vars*)
-    (vector-push-extend
-     (make-hole <span style="color: #7070a0;">:type</span> type <span style="color: #7070a0;">:tryable-types</span> *tryable-types*)
-     *holes*)))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">gensym-1</span> (thing)
-  (gensym (coerce
-           (mapcan (<span style="color: #7070a0;">lambda</span> (c)
-                     (<span style="color: #7070a0;">cond</span> ((alpha-char-p c) (list c))
-                           ((alphanumericp c) nil)
-                           (t (list #\-))))
-                   (coerce (format nil <span style="color: #FF4FA4;">"~a"</span> thing) 'list))
-           'string)))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">with-tryables</span> (exprs-and-types <span style="color: #7070a0;">&amp;body</span> body)
-  <span style="color: #FF4FA4;">"EXPRS-AND-TYPES should be of the form ((EXPR TYPE) ...).</span>
-<span style="color: #FF4FA4;">Make EXPR tryable for `</span><span style="color: #000000;">hole</span><span style="color: #FF4FA4;">' forms in BODY."</span>
-  (bind ((exprs (mapcar #'car exprs-and-types))
-         (types (mapcar #'cadr exprs-and-types))
-         (vars (mapcar #'gensym-1 types)))
-    `(<span style="color: #7070a0;">let</span> ,(mapcar #'list vars exprs)
-       (<span style="color: #7070a0;">compiler-let</span>
-           ((*tryable-vars* ',(append vars *tryable-vars*))
-            (*tryable-types* ',(append types *tryable-types*)))
-         ,@body))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">register-tryable-function</span> (name type function)
-  <span style="color: #FF4FA4;">"Register tryable function at code generation time."</span>
-  (t:ematch type
-    ((list 'function arg-types return-type)
-     (<span style="color: #7070a0;">setf</span> (fdefinition name) function)
-     (<span style="color: #7070a0;">setf</span> (get name 'return-type) return-type)
-     (<span style="color: #7070a0;">setf</span> (get name 'arg-types) arg-types)
-     (push name *tryable-functions*)
-     function)))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">add-library-function</span> (name return-type)
-  <span style="color: #FF4FA4;">"Add library function to `</span><span style="color: #000000;">*library-table*</span><span style="color: #FF4FA4;">' at evaluation time."</span>
-  (push name (gethash return-type *library-table*)))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">ensure-simple-array</span> (array <span style="color: #7070a0;">&amp;optional</span> (element-type t))
-  (<span style="color: #7070a0;">if</span> (typep array `(simple-array ,element-type))
-      array
-      (map-into (make-array (length array) <span style="color: #7070a0;">:element-type</span> element-type)
-                #'identity array)))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">with-pfun</span> (<span style="color: #7070a0;">&amp;whole</span> source (type) <span style="color: #7070a0;">&amp;body</span> body)
-  (<span style="color: #7070a0;">let</span> ((holes (s:vect)))
-    `(<span style="color: #7070a0;">compiler-let</span> ((*holes* ,holes))
-       (<span style="color: #7070a0;">let</span> (*tryable-functions*)
-         (make-pfun <span style="color: #7070a0;">:function</span> (<span style="color: #7070a0;">progn</span> ,@body)
-                    <span style="color: #7070a0;">:holes</span> (ensure-simple-array ,holes)
-                    <span style="color: #7070a0;">:type</span> ',type
-                    <span style="color: #7070a0;">:functions</span> (nreverse *tryable-functions*)
-                    <span style="color: #7070a0;">:printer</span> (<span style="color: #7070a0;">lambda</span> () (<span style="color: #FF4FA4;">error</span> <span style="color: #FF4FA4;">"Unimplemented"</span>))
-                    <span style="color: #7070a0;">:source</span> ',source)))))
-</pre>
-</div>
-</div>
-</div>
-</div>
-<div id="outline-container-org8483f4a" class="outline-3">
-<h3 id="org8483f4a">Skeleton Generators</h3>
-<div class="outline-text-3" id="text-org8483f4a">
-<p>
-Skeleton generators are written as macros. By convention, we use <code>compiler-let</code> to pass down expected output type via <code>*output-type*</code>, so that skeleton generator macros can do return-type polymorphism. Each skeleton generator macro should also do so for their sub-forms.
-</p>
-<div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*output-type*</span> nil <span style="color: #FF4FA4;">"Intended output type for current macro at code generation time."</span>)
-</pre>
-</div>
-</div>
-<div id="outline-container-org59950ee" class="outline-4">
-<h4 id="org59950ee">Single-dispatch function population</h4>
-<div class="outline-text-4" id="text-org59950ee">
+<div id="outline-container-org437865e" class="outline-4">
+<h4 id="org437865e"><span class="section-number-4">2.5.2.</span> Single-dispatch function population</h4>
+<div class="outline-text-4" id="text-2-5-2">
 <p>
 A set of mutually recursive function, each dispatching on their first argument.
 </p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">dispatch-1</span> (dispatch-value dispatch-type <span style="color: #7070a0;">&amp;rest</span> clauses)
-  <span style="color: #FF4FA4;">"Single dispatch on DISPATCH-VALUE and make its field members tryable.</span>
-<span style="color: #FF4FA4;">CLAUSES should be of the form ((constructor body...)....)"</span>
-  (a:once-only (dispatch-value)
-    `(<span style="color: #7070a0;">etypecase</span> ,dispatch-value
-       ,@ (mapcar (t:lambda-ematch1 (list* c body)
-                    `(,(constructor-&gt;cl-type c)
-                      (<span style="color: #7070a0;">with-tryables</span>
-                          ,(mapcar (<span style="color: #7070a0;">lambda</span> (accessor field-type)
-                                     `((,accessor ,dispatch-value) ,field-type))
-                                   (accessors c) (arg-types c dispatch-type))
-                        ,@body)))
-           clauses))))
-<span style="color: #7070a0; font-style: italic;">#+nil (defmacro dispatcher (&amp;optional (name (gensym "DISPATCHER") ))</span>
-<span style="color: #7070a0; font-style: italic;">        "Generate code for a single dispatch function.</span>
-<span style="color: #7070a0; font-style: italic;">The generated code does not add the function into tryable expressions.</span>
-<span style="color: #7070a0; font-style: italic;">To support recursion, the user of this generator should register the</span>
-<span style="color: #7070a0; font-style: italic;">generated function via `</span><span style="color: #000000; font-style: italic;">register-tryable-function</span><span style="color: #7070a0; font-style: italic;">'."</span>
-<span style="color: #7070a0; font-style: italic;">        (bind (((_ input-types output-type) *output-type*)</span>
-<span style="color: #7070a0; font-style: italic;">               (vars (mapcar #'gensym-1 input-types))</span>
-<span style="color: #7070a0; font-style: italic;">               (dispatch-type (car input-types))</span>
-<span style="color: #7070a0; font-style: italic;">               (dispatch-var (car vars)))</span>
-<span style="color: #7070a0; font-style: italic;">          `(named-lambda ,name ,vars</span>
-<span style="color: #7070a0; font-style: italic;">             (check-resource-limit)</span>
-<span style="color: #7070a0; font-style: italic;">             (with-tryables</span>
-<span style="color: #7070a0; font-style: italic;">                 ,(mapcar #'list vars input-types)</span>
-<span style="color: #7070a0; font-style: italic;">               (compiler-let ((*output-type* ',output-type))</span>
-<span style="color: #7070a0; font-style: italic;">                 (dispatch-1 ,dispatch-var ,dispatch-type</span>
-<span style="color: #7070a0; font-style: italic;">                             ,@ (mapcar (lambda (c) `(,c (hole ,output-type)))</span>
-<span style="color: #7070a0; font-style: italic;">                                        (constructors dispatch-type))))))))</span>
-<span style="color: #7070a0; font-style: italic;">#+nil (defmacro population-pfun (&amp;rest types)</span>
-<span style="color: #7070a0; font-style: italic;">        (bind ((main-type (car (last types)))</span>
-<span style="color: #7070a0; font-style: italic;">               (function-names (mapcar (lambda (type) (declare (ignore type)) (gensym "F")) types)))</span>
-<span style="color: #7070a0; font-style: italic;">          `(with-pfun (,main-type)</span>
-<span style="color: #7070a0; font-style: italic;">             ,@(mapcar</span>
-<span style="color: #7070a0; font-style: italic;">                (lambda (type name)</span>
-<span style="color: #7070a0; font-style: italic;">                  `(register-tryable-function</span>
-<span style="color: #7070a0; font-style: italic;">                    ',name ',type</span>
-<span style="color: #7070a0; font-style: italic;">                    (compiler-let ((*output-type* ',type))</span>
-<span style="color: #7070a0; font-style: italic;">                      (dispatcher ,name))))</span>
-<span style="color: #7070a0; font-style: italic;">                types function-names))))</span>
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">population-pfun</span> (<span style="color: #7070a0;">&amp;rest</span> types)
-  (bind ((main-type (car (last types)))
-         (function-names (mapcar (<span style="color: #7070a0;">lambda</span> (type) (<span style="color: #7070a0;">declare</span> (ignore type)) (gensym <span style="color: #FF4FA4;">"F"</span>)) types)))
-    `(<span style="color: #7070a0;">with-pfun</span> (,main-type)
-       (<span style="color: #7070a0;">labels</span> ,(mapcar (<span style="color: #7070a0;">lambda</span> (type f)
-                          (bind (((_ input-types output-type) type)
-                                 (args (mapcar #'gensym-1 input-types))
-                                 (dispatch-type (car input-types)))
-                            `(,f ,args
-                                 (<span style="color: #FF4FA4;">check-resource-limit</span>)
-                                 (<span style="color: #7070a0;">with-tryables</span>
-                                     ,(mapcar #'list args input-types)
-                                   (dispatch-1
-                                    ,(car args) ,dispatch-type
-                                    ,@ (mapcar (<span style="color: #7070a0;">lambda</span> (c)
-                                                 `(,c (<span style="color: #7070a0;">with-tryables</span>
-                                                          ,(<span style="color: #7070a0;">when</span> (recursive-p c dispatch-type)
-                                                             (mapcar (<span style="color: #7070a0;">lambda</span> (type f)
-                                                                       (bind (((_ input-types output-type) type))
-                                                                         `((,f ,@ (mapcar (<span style="color: #7070a0;">lambda</span> (type) `(hole ,type)) input-types)) ,output-type)))
-                                                                     types function-names))
-                                                        (<span style="color: #7070a0;">with-tryables</span>
-                                                            ,(<span style="color: #7070a0;">when</span> (recursive-p c dispatch-type)
-                                                               (mapcar (<span style="color: #7070a0;">lambda</span> (type f)
-                                                                         (bind (((_ input-types output-type) type))
-                                                                           `((,f ,@ (mapcar (<span style="color: #7070a0;">lambda</span> (type) `(hole ,type)) input-types)) ,output-type)))
-                                                                       types function-names))
-                                                          (hole ,output-type)))))
-                                               (constructors dispatch-type)))))))
+<pre class="src src-lisp">(<span class="org-keyword">defmacro</span> <span class="org-function-name">dispatch-1</span> (dispatch-value dispatch-type <span class="org-builtin">&amp;body</span> clauses)
+  <span class="org-doc">"Single dispatch on DISPATCH-VALUE and make its field members tryable.</span>
+<span class="org-doc">CLAUSES should be of the form ((constructor body...)....)"</span>
+  (once-only (dispatch-value)
+    `(<span class="org-keyword">etypecase</span> ,dispatch-value
+       ,@(mapcar (t:lambda-ematch1 (list* c body)
+                   `(,(constructor-&gt;cl-type c)
+                     (<span class="org-keyword">with-tryables</span>
+                         ,(mapcar (<span class="org-keyword">lambda</span> (accessor field-type)
+                                    `((,accessor ,dispatch-value) ,field-type))
+                                  (accessors c) (arg-types c dispatch-type))
+                       ,@body)))
+          clauses))))
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">population-skeleton</span> (<span class="org-builtin">&amp;rest</span> types)
+  (bind ((main-type (lastcar types))
+         (function-names (make-gensym-list (length types) <span class="org-string">"F"</span>)))
+    `(<span class="org-keyword">with-skeleton</span> (,main-type)
+       (<span class="org-keyword">labels</span> ,(mapcar
+                 (<span class="org-keyword">lambda</span> (type f)
+                   (bind (((_ input-types output-type) type)
+                          (args (mapcar #'gensym-1 input-types))
+                          (dispatch-type (car input-types)))
+                     `(,f ,args
+                          (<span class="org-warning">check-resource-limit</span>)
+                          (<span class="org-keyword">with-tryables</span>
+                              ,(mapcar #'list args input-types)
+                            (dispatch-1
+                             ,(car args) ,dispatch-type
+                             ,@(mapcar (<span class="org-keyword">lambda</span> (c)
+                                          `(,c (<span class="org-keyword">with-tryables</span>
+                                                   ,(<span class="org-keyword">when</span> (recursive-p c dispatch-type)
+                                                      (mapcar
+                                                       (<span class="org-keyword">lambda</span> (type f)
+                                                         (bind (((_ input-types output-type) type))
+                                                           `((,f ,@(mapcar (<span class="org-keyword">lambda</span> (type) `(hole ,type)) input-types)) ,output-type)))
+                                                              types function-names))
+                                                 (<span class="org-keyword">with-tryables</span>
+                                                     ,(<span class="org-keyword">when</span> (recursive-p c dispatch-type)
+                                                        (mapcar
+                                                         (<span class="org-keyword">lambda</span> (type f)
+                                                           (bind (((_ input-types output-type) type))
+                                                             `((,f ,@(mapcar (<span class="org-keyword">lambda</span> (type) `(hole ,type)) input-types)) ,output-type)))
+                                                                types function-names))
+                                                   (hole ,output-type)))))
+                                        (constructors dispatch-type)))))))
                  types function-names)
-         #',(car (last function-names))))))
+         #',(lastcar function-names)))))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org74e7b57" class="outline-4">
-<h4 id="org74e7b57">Paramorphism</h4>
-<div class="outline-text-4" id="text-org74e7b57">
+
+<div id="outline-container-org8bf056b" class="outline-4">
+<h4 id="org8bf056b"><span class="section-number-4">2.5.3.</span> Paramorphism</h4>
+<div class="outline-text-4" id="text-2-5-3">
 <p>
-Properly-nested paramorphism.
+Properly-nested <a href="https://en.wikipedia.org/wiki/paramorphism">paramorphism</a>.
 </p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">para</span> (dispatch-value dispatch-type <span style="color: #7070a0;">&amp;rest</span> clauses)
-  `(<span style="color: #7070a0;">labels</span> ((process (dispatch-value)
-              (<span style="color: #FF4FA4;">check-resource-limit</span>)
+<pre class="src src-lisp">(<span class="org-keyword">defmacro</span> <span class="org-function-name">para</span> (dispatch-value dispatch-type <span class="org-builtin">&amp;rest</span> clauses)
+  `(<span class="org-keyword">labels</span> ((process (dispatch-value)
+              (<span class="org-warning">check-resource-limit</span>)
               (dispatch-1 dispatch-value ,dispatch-type
-                          ,@ (mapcar (t:lambda-ematch1 (list* c body)
-                                       `(,c
-                                         (<span style="color: #7070a0;">with-tryables</span>
-                                             ,(mapcan
-                                               (<span style="color: #7070a0;">lambda</span> (a field-type)
-                                                 (<span style="color: #7070a0;">when</span> (equal field-type dispatch-type)
-                                                   `(((process (,a dispatch-value)) ,dispatch-type))))
-                                               (accessors c)
-                                               (arg-types c dispatch-type))
-                                           ,@body)))
-                                     clauses))))
+                ,@(mapcar
+                   (t:lambda-ematch1 (list* c body)
+                     `(,c
+                       (<span class="org-keyword">with-tryables</span>
+                           ,(s:filter-map
+                             (<span class="org-keyword">lambda</span> (a field-type)
+                               (<span class="org-keyword">when</span> (equal field-type dispatch-type)
+                                 `((process (,a dispatch-value))
+                                   ,dispatch-type)))
+                             (accessors c)
+                             (arg-types c dispatch-type))
+                         ,@body)))
+                   clauses))))
      (process ,dispatch-value)))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">properly-nested-para</span> (<span style="color: #7070a0;">&amp;rest</span> dispatch-types)
-  (trivia:match dispatch-types
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">properly-nested-para</span> (<span class="org-builtin">&amp;rest</span> dispatch-types)
+  (t:match dispatch-types
     ((cons type rest)
      `(para (hole ,type) ,type
-            ,@ (mapcar
-                (<span style="color: #7070a0;">lambda</span> (c)
-                  `(,c
-                    ,(<span style="color: #7070a0;">if</span> (recursive-p c type)
-                         `(properly-nested-para ,@rest)
-                         `(hole ,*output-type*))))
-                (constructors type))))
+            ,@(mapcar
+               (<span class="org-keyword">lambda</span> (c)
+                 `(,c
+                   ,(<span class="org-keyword">if</span> (recursive-p c type)
+                        `(properly-nested-para ,@rest)
+                        `(hole ,*output-type*))))
+               (constructors type))))
     (nil `(hole ,*output-type*))))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">para-pfun</span> (function-type <span style="color: #7070a0;">&amp;rest</span> dispatch-types)
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">para-skeleton</span> (function-type <span class="org-builtin">&amp;rest</span> dispatch-types)
   (bind (((_ input-types output-type) function-type)
          (args (mapcar #'gensym-1 input-types)))
-    `(<span style="color: #7070a0;">with-pfun</span> (,function-type)
-       (<span style="color: #7070a0;">lambda</span> ,args
-         (<span style="color: #7070a0;">with-tryables</span> ,(mapcar #'list args input-types)
-           (<span style="color: #7070a0;">compiler-let</span> ((*output-type* ',output-type))
+    `(<span class="org-keyword">with-skeleton</span> (,function-type)
+       (<span class="org-keyword">lambda</span> ,args
+         (<span class="org-keyword">with-tryables</span> ,(mapcar #'list args input-types)
+           (<span class="org-keyword">compiler-let</span> ((*output-type* ',output-type))
              (properly-nested-para ,@dispatch-types)))))))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(macroexpand-some
+ '(para-skeleton (function (nat nat) nat) nat nat nat)
+ (<span class="org-keyword">lambda</span> (form) (member (car form) '(para-skeleton properly-nested-para))))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-lisp">
+(<span class="org-keyword">WITH-SKELETON</span> ((FUNCTION (NAT NAT) NAT))
+  (<span class="org-keyword">LAMBDA</span> (<span class="org-builtin">#:NAT879</span> <span class="org-builtin">#:NAT880</span>)
+    (<span class="org-keyword">WITH-TRYABLES</span> ((<span class="org-builtin">#:NAT879</span> NAT) (<span class="org-builtin">#:NAT880</span> NAT))
+      (<span class="org-keyword">COMPILER-LET</span> ((*OUTPUT-TYPE* 'NAT))
+                    (PARA (HOLE NAT) NAT (ZERO (HOLE NAT))
+                          (SUCC
+                           (PARA (HOLE NAT) NAT (ZERO (HOLE NAT))
+                                 (SUCC
+                                  (PARA (HOLE NAT) NAT (ZERO (HOLE NAT))
+                                        (SUCC (HOLE NAT)))))))))))
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org22efc97" class="outline-3">
-<h3 id="org22efc97">Search operators</h3>
-<div class="outline-text-3" id="text-org22efc97">
+<div id="outline-container-org4cf6a64" class="outline-3">
+<h3 id="org4cf6a64"><span class="section-number-3">2.6.</span> Search operators</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+We use quite a bit of non-determinstic programming via continuation-passing style. Our convention:
+</p>
+<ul class="org-ul">
+<li><p>
+A <i>non-deterministic</i> function is a function that accept a <i>continuation</i> as its first argument. It "return" values by calling this continuation.
+</p>
+
+<p>
+The function can return multiple times via multiple calls to its continuation.
+</p></li>
+<li>It's recommended to use <code>klet</code> to stack allocate continuations.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">map-one</span> (cont f list <span class="org-builtin">&amp;rest</span> lists)
+  <span class="org-doc">"Call non-deterministic function F with each element of LIST (and corresponding elements of LISTS).</span>
+<span class="org-doc">Return the results of replacing each element of LIST of F's return value."</span>
+  (<span class="org-keyword">declare</span> (type function cont))
+  (<span class="org-keyword">when</span> list
+    (klet ((cont (r) (funcall cont (cons r (cdr list)))))
+      (apply f #'cont (car list) (mapcar #'car lists)))
+    (klet ((cont (r) (funcall cont (cons (car list) r))))
+      (apply #'map-one #'cont f (cdr list) (mapcar #'cdr lists)))))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(map-one #'print (<span class="org-keyword">lambda</span> (k r) (funcall k (1+ r))) '(1 2 3))
+</pre>
+</div>
+
+<pre class="example">
+
+(2 2 3)
+(1 3 3)
+(1 2 4)
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-lisp">(map-one #'print (<span class="org-keyword">lambda</span> (k r y) (funcall k (list r y))) '(1 2 3) '(a b c))
+</pre>
+</div>
+
+<pre class="example">
+
+((1 A) 2 3)
+(1 (2 B) 3)
+(1 2 (3 C))
+</pre>
+
+
 <p>
 We apply the following rewrites recursively to every subterm in a given term:
 </p>
@@ -612,333 +843,386 @@ We apply the following rewrites recursively to every subterm in a given term:
 <dt>Projection</dt><dd>If the current subterm is an application, replace the current subterm with one of its argument of the same type, if any.</dd>
 </dl>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">generate-mutations</span> (term hole cont)
-  <span style="color: #FF4FA4;">"Generate mutations of TERM for a given HOLE."</span>
-  (<span style="color: #7070a0;">declare</span> (type function cont))
-  (<span style="color: #7070a0;">labels</span> ((process (term type cont)
-             <span style="color: #7070a0; font-style: italic;">;; </span><span style="color: #7070a0; font-style: italic;">Construction</span>
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">generate-mutations</span> (cont term hole)
+  <span class="org-doc">"Generate mutations of TERM for a given HOLE."</span>
+  (<span class="org-keyword">declare</span> (type function cont))
+  (<span class="org-keyword">labels</span> ((process (cont term type)
+             <span class="org-comment-delimiter">;; </span><span class="org-comment">Construction</span>
              (mapc
-              (<span style="color: #7070a0;">lambda</span> (f)
-                (<span style="color: #7070a0;">let</span> ((args (mapcar
-                             (<span style="color: #7070a0;">lambda</span> (arg-type)
-                               (<span style="color: #7070a0;">if</span> (equal arg-type type) term (default-term arg-type)))
+              (<span class="org-keyword">lambda</span> (f)
+                (<span class="org-keyword">let</span> ((args (mapcar
+                             (<span class="org-keyword">lambda</span> (arg-type)
+                               (<span class="org-keyword">if</span> (equal arg-type type)
+                                   term
+                                   (default-term arg-type)))
                              (arg-types f type))))
                   (funcall cont (cons f args))))
               (library-functions type))
-             <span style="color: #7070a0; font-style: italic;">;; </span><span style="color: #7070a0; font-style: italic;">Variable</span>
-             (iter (for tryable-type in (hole-tryable-expr-types hole))
+             <span class="org-comment-delimiter">;; </span><span class="org-comment">Variable</span>
+             (iter (for tryable-type in (hole-tryable-types hole))
                (for i from 0)
-               (<span style="color: #7070a0;">when</span> (equal tryable-type type)
+               (<span class="org-keyword">when</span> (equal tryable-type type)
                  (funcall cont `(tryable ,i))))
              (t:match term
                ((list 'tryable _))
                ((list* op args)
-                (iter (for arg in args) <span style="color: #7070a0; font-style: italic;">;; </span><span style="color: #7070a0; font-style: italic;">Projection</span>
-                  (for arg-type in (arg-types op type))
-                  (<span style="color: #7070a0;">when</span> (equal arg-type type)
-                    (funcall cont arg)))
-                (iter (for (arg . rest) on args) <span style="color: #7070a0; font-style: italic;">;; </span><span style="color: #7070a0; font-style: italic;">Subterms</span>
-                  (for arg-type in (arg-types op type))
-                  (klet ((cont (arg-1)
-                           (funcall cont
-                                    (cons op (append processed (list arg-1) rest)))))
-                    (process arg arg-type #'cont))
-                  (collect arg into processed))))))
-    (process term (hole-type hole) cont)))
-
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">Projection</span>
+                (mapc
+                 (<span class="org-keyword">lambda</span> (arg arg-type)
+                   (<span class="org-keyword">when</span> (equal arg-type type)
+                     (funcall cont arg)))
+                 args (arg-types op type))
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">Subterms</span>
+                (map-one cont #'process args (arg-types op type))))))
+    (process cont term (hole-type hole))))
 </pre>
 </div>
+
+<p>
+Example:
+</p>
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">let</span> ((*library-table* (make-hash-table <span class="org-builtin">:test</span> 'equal)))
+  (add-library-function 'cons 'list-of)
+  (add-library-function 'nil 'list-of)
+  (add-library-function 'succ 'nat)
+  (add-library-function 'zero 'nat)
+
+  (generate-mutations
+   #'print '(cons (zero) (nil))
+   (make-hole <span class="org-builtin">:type</span> '(list-of nat)
+              <span class="org-builtin">:tryable-types</span> '(nat nat (list-of nat)))))
+</pre>
+</div>
+
+<pre class="example" id="orga9ae39f">
+(NIL)
+(CONS (ZERO) (CONS (ZERO) (NIL)))
+(TRYABLE 2)
+(NIL)
+((ZERO) (NIL))
+((SUCC (ZERO)) (NIL))
+((TRYABLE 0) (NIL))
+((TRYABLE 1) (NIL))
+((ZERO) (NIL))
+((ZERO) (CONS (ZERO) (NIL)))
+((ZERO) (TRYABLE 2))
+</pre>
+
+<p>
+Note that <code>generate-mutations</code> may return duplicated terms. Caller is advised to perform a clean up (e.g. using <a href="http://clhs.lisp.se/Body/f_rm_dup.htm">delete-duplicates</a>).
+</p>
 
 <p>
 We compile specialized versions of <code>value-size-function</code> and <code>edit-distance-function</code> for each type, because they have a big impact on performance. At runtime, <code>edit-distance-function</code> uses <code>*edit-distance-memo*</code> table to perform Dynamic Programming calculation of edit distance. The size of the table and any resizing will affect performance, so you should keep it as small as possible.
 </p>
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">term-size</span> (term)
-  (<span style="color: #7070a0;">if</span> (consp term) (reduce #'+ term <span style="color: #7070a0;">:key</span> #'term-size) 1))
-(<span style="color: #7070a0;">progn</span>
-  (<span style="color: #7070a0;">define-memo-function</span> value-size-function (type)
-    (compile nil
-             `(<span style="color: #7070a0;">lambda</span> (value)
-                (<span style="color: #7070a0;">labels</span> ((process (value)
-                           (<span style="color: #7070a0;">etypecase</span> value
-                             ,@(mapcar (<span style="color: #7070a0;">lambda</span> (c)
-                                         `(,(constructor-&gt;cl-type c)
-                                           (+ ,(<span style="color: #7070a0;">if</span> (eq c (min-constructor type)) 0 1)
-                                              ,@(mapcar
-                                                 (<span style="color: #7070a0;">lambda</span> (accessor arg-type)
-                                                   (<span style="color: #7070a0;">if</span> (equal arg-type type)
-                                                       `(process (,accessor value))
-                                                       `(value-size ',arg-type (,accessor value))))
-                                                 (accessors c)
-                                                 (arg-types c type)))))
-                                (constructors type)))))
-                  (process value)))))
-  (<span style="color: #7070a0;">setf</span> (function-memo value-size-function nat) #'abs))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">value-size</span> (type value)
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">term-size</span> (term)
+  (<span class="org-keyword">if</span> (consp term) (reduce #'+ term <span class="org-builtin">:key</span> #'term-size) 1))
+(<span class="org-keyword">progn</span>
+  (<span class="org-keyword">define-memo-function</span> value-size-function (type)
+    (compile-lambda
+     `(<span class="org-keyword">lambda</span> (value)
+        (<span class="org-keyword">labels</span> ((process (value)
+                   (<span class="org-keyword">etypecase</span> value
+                     ,@(mapcar
+                        (<span class="org-keyword">lambda</span> (c)
+                          `(,(constructor-&gt;cl-type c)
+                            (+ ,(<span class="org-keyword">if</span> (eq c (min-constructor type)) 0 1)
+                               ,@(mapcar
+                                  (<span class="org-keyword">lambda</span> (accessor arg-type)
+                                    (<span class="org-keyword">if</span> (equal arg-type type)
+                                        `(process (,accessor value))
+                                        `(value-size ',arg-type
+                                                     (,accessor value))))
+                                  (accessors c)
+                                  (arg-types c type)))))
+                        (constructors type)))))
+          (process value)))))
+  (<span class="org-keyword">setf</span> (function-memo value-size-function nat) #'abs))
+(<span class="org-keyword">defun</span> <span class="org-function-name">value-size</span> (type value)
   (funcall (value-size-function type) value))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">make-edit-distance-memo</span> ()
-  (make-hash-table <span style="color: #7070a0;">:test</span> (<span style="color: #7070a0;">lambda</span> (x y)
-                           (and (eq (car x) (car y)) (eq (cdr x) (cdr y))))
-                   <span style="color: #7070a0;">:hash-function</span>
-                   (<span style="color: #7070a0;">lambda</span> (x)
-                     (logxor (sb-impl::eq-hash (car x)) (sb-impl::eq-hash (cdr x))))))
-(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*edit-distance-memo*</span> (make-edit-distance-memo)
-  <span style="color: #FF4FA4;">"Memoization table for edit distance calculation using dynamic programming.</span>
-<span style="color: #FF4FA4;">Maps (X . Y) to the (EDIT-DISTANCE TYPE X Y), where TYPE is reasonable (is this ok?).</span>
-<span style="color: #FF4FA4;">It should be CLRHASH-ed regularly to avoid growth in size for performance reason."</span>)
-(<span style="color: #7070a0;">progn</span>
-  (<span style="color: #7070a0;">define-memo-function</span> edit-distance-function (type)
-    (compile nil
-             `(<span style="color: #7070a0;">lambda</span> (value-1 value-2)
-                (<span style="color: #7070a0;">labels</span> ((process (value-1 value-2)
-                           (or (gethash (cons value-1 value-2) *edit-distance-memo*)
-                               (<span style="color: #7070a0;">setf</span> (gethash (cons value-1 value-2) *edit-distance-memo*)
-                                     (<span style="color: #7070a0;">flet</span> ((one-side (value-1 value-2)
-                                              (<span style="color: #7070a0;">etypecase</span> value-1
-                                                ,@(mapcar
-                                                   (<span style="color: #7070a0;">lambda</span> (c)
-                                                     `(,(constructor-&gt;cl-type c)
-                                                       ,(<span style="color: #7070a0;">if</span> (recursive-p c type)
-                                                            `(min ,@
-                                                              (iter (for accessor in (accessors c))
-                                                                (for arg-type in (arg-types c type))
-                                                                (<span style="color: #7070a0;">when</span> (equal arg-type type)
-                                                                  (collect `(1+ (process (,accessor value-1) value-2))))))
-                                                            `(+ (<span style="color: #7070a0;">if</span> (equal value-1 ',(default-value type))
-                                                                    0 1)
-                                                                (value-size ',type value-2)))))
-                                                   (constructors type)))))
-                                       (min
-                                        (one-side value-1 value-2)
-                                        (one-side value-2 value-1)
-                                        (<span style="color: #7070a0;">etypecase</span> value-1
-                                          ,@(mapcar
-                                             (<span style="color: #7070a0;">lambda</span> (c)
-                                               `(,(constructor-&gt;cl-type c)
-                                                 (<span style="color: #7070a0;">if</span> (typep value-2 ',(constructor-&gt;cl-type c))
-                                                     (+ ,@
-                                                      (iter (for accessor in (accessors c))
-                                                        (for arg-type in (arg-types c type))
-                                                        (collect
-                                                            (<span style="color: #7070a0;">if</span> (equal arg-type type)
-                                                                `(process (,accessor value-1) (,accessor value-2))
-                                                                `(edit-distance ',arg-type (,accessor value-1) (,accessor value-2))))))
-                                                     1000)))
-                                             (constructors type)))))))))
-                  (process value-1 value-2)))))
-  (<span style="color: #7070a0;">setf</span> (function-memo edit-distance-function nat) (<span style="color: #7070a0;">lambda</span> (x y) (abs (- x y)))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">edit-distance</span> (type value-1 value-2)
+(<span class="org-keyword">defun</span> <span class="org-function-name">make-edit-distance-memo</span> ()
+  (make-hash-table
+   <span class="org-builtin">:test</span> (<span class="org-keyword">lambda</span> (x y)
+           (and (eq (car x) (car y))
+                (eq (cdr x) (cdr y))))
+   <span class="org-builtin">:hash-function</span>
+   (<span class="org-keyword">lambda</span> (x)
+     (logxor (sb-impl::eq-hash (car x))
+             (sb-impl::eq-hash (cdr x))))))
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">*edit-distance-memo*</span> (make-edit-distance-memo)
+  <span class="org-doc">"Memoization table for edit distance calculation using dynamic programming.</span>
+<span class="org-doc">Maps (X . Y) to the (EDIT-DISTANCE TYPE X Y), where TYPE is reasonable (is this ok?).</span>
+<span class="org-doc">It should be CLRHASH-ed regularly to avoid growth in size for performance reason."</span>)
+(<span class="org-keyword">progn</span>
+  (<span class="org-keyword">define-memo-function</span> edit-distance-function (type)
+    (compile-lambda
+     `(<span class="org-keyword">lambda</span> (value-1 value-2)
+        (<span class="org-keyword">labels</span> ((one-side (value-1 value-2)
+                   (<span class="org-keyword">etypecase</span> value-1
+                     ,@(mapcar
+                        (<span class="org-keyword">lambda</span> (c)
+                          `(,(constructor-&gt;cl-type c)
+                            ,(<span class="org-keyword">if</span> (recursive-p c type)
+                                 `(min ,@
+                                   (s:filter-map
+                                    (<span class="org-keyword">lambda</span> (accessor arg-type)
+                                      (<span class="org-keyword">when</span> (equal arg-type type)
+                                        `(1+ (process (,accessor value-1)
+                                                      value-2))))
+                                    (accessors c)
+                                    (arg-types c type)))
+                                 `(+ (<span class="org-keyword">if</span> (equal value-1 ',(default-value type))
+                                         0 1)
+                                     (value-size ',type value-2)))))
+                        (constructors type))))
+                 (process (value-1 value-2)
+                   (ensure-gethash
+                    (cons value-1 value-2) *edit-distance-memo*
+                    (min
+                     (one-side value-1 value-2)
+                     (one-side value-2 value-1)
+                     (<span class="org-keyword">etypecase</span> value-1
+                       ,@(mapcar
+                          (<span class="org-keyword">lambda</span> (c)
+                            `(,(constructor-&gt;cl-type c)
+                              (<span class="org-keyword">if</span> (typep value-2 ',(constructor-&gt;cl-type c))
+                                  (+ ,@
+                                   (mapcar
+                                    (<span class="org-keyword">lambda</span> (accessor arg-type)
+                                      (<span class="org-keyword">if</span> (equal arg-type type)
+                                          `(process (,accessor value-1)
+                                                    (,accessor value-2))
+                                          `(edit-distance ',arg-type
+                                                          (,accessor value-1)
+                                                          (,accessor value-2))))
+                                    (accessors c)
+                                    (arg-types c type)))
+                                  1000)))
+                          (constructors type)))))))
+          (process value-1 value-2)))))
+  (<span class="org-keyword">setf</span> (function-memo edit-distance-function nat)
+        (<span class="org-keyword">lambda</span> (x y) (abs (- x y)))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">edit-distance</span> (type value-1 value-2)
   (funcall (edit-distance-function type) value-1 value-2))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgfc8d581" class="outline-3">
-<h3 id="orgfc8d581">Search algorithm</h3>
-<div class="outline-text-3" id="text-orgfc8d581">
+<div id="outline-container-orgaba670a" class="outline-3">
+<h3 id="orgaba670a"><span class="section-number-3">2.7.</span> Search algorithm</h3>
+<div class="outline-text-3" id="text-2-7">
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">locally</span>
-    (<span style="color: #7070a0;">declare</span> (optimize (speed 3)))
-  (<span style="color: #7070a0;">declaim</span> (inline fastlog2))
-  (<span style="color: #7070a0;">defun</span> <span style="color: #000000;">fastlog2</span> (p)
-    <span style="color: #FF4FA4;">"Compute log2(P) approximately for *positive* integer P."</span>
-    (<span style="color: #7070a0;">declare</span> (type fixnum p))
-    (<span style="color: #7070a0;">let*</span> ((exponent (1- (integer-length p)))
+<pre class="src src-lisp">(<span class="org-keyword">locally</span>
+    (<span class="org-keyword">declare</span> (optimize (speed 3)))
+  (s:defsubst fastlog2 (p)
+    <span class="org-string">"Compute log2(P) approximately for *positive* integer P."</span>
+    (<span class="org-keyword">declare</span> (type fixnum p))
+    (<span class="org-keyword">let*</span> ((exponent (1- (integer-length p)))
            (x (scale-float (coerce p 'single-float) (- exponent))))
-      (<span style="color: #7070a0;">declare</span> (type single-float x))
+      (<span class="org-keyword">declare</span> (type single-float x))
       (+ exponent (- (* -0.4326728 x (- x 5.261706)) 1.8439242))))
-  (<span style="color: #7070a0;">defun</span> <span style="color: #000000;">accept-p</span> (cost-2 cost-1 beta)
-    (<span style="color: #7070a0;">declare</span> (type single-float cost-2 cost-1 beta))
+  (<span class="org-keyword">defun</span> <span class="org-function-name">accept-p</span> (cost-2 cost-1 beta)
+    (<span class="org-keyword">declare</span> (type single-float cost-2 cost-1 beta))
     (or (&lt; cost-2 cost-1)
         (&lt; (+ (fastlog2 (1+ (random 1000))) (* beta (- cost-2 cost-1)))
            (fastlog2 (1+ 1000))))))
 
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">stop-tasks</span> ()
-  (sleep 0.1) <span style="color: #7070a0; font-style: italic;">;; </span><span style="color: #7070a0; font-style: italic;">avoid some race conditions</span>
+(<span class="org-keyword">defun</span> <span class="org-function-name">stop-tasks</span> ()
+  (sleep 0.1) <span class="org-comment-delimiter">;; </span><span class="org-comment">avoid some race conditions</span>
   (iter (for worker in-vector (lparallel.kernel::workers lparallel:*kernel*))
     (for thread = (lparallel.kernel::thread worker))
-    (sb-thread:interrupt-thread thread (<span style="color: #7070a0;">lambda</span> () (<span style="color: #7070a0;">ignore-errors</span> (<span style="color: #7070a0;">throw</span> '<span style="color: #000000;">random-search</span> nil))))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">random-search</span> (par mutate cost <span style="color: #7070a0;">&amp;key</span> (beta 5.0) (restart 10000) (timeout 100.0))
-  (<span style="color: #7070a0;">let</span> ((timeout timeout) (i 0) (initial-cost (funcall cost par)))
-    (<span style="color: #7070a0;">let</span> ((*edit-distance-memo* (make-edit-distance-memo))
+    (sb-thread:interrupt-thread
+     thread
+     (<span class="org-keyword">lambda</span> () (<span class="org-keyword">ignore-errors</span> (<span class="org-keyword">throw</span> '<span class="org-constant">random-search</span> nil))))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">random-search</span>
+    (par mutate cost <span class="org-builtin">&amp;key</span> (beta 5.0) (restart 10000) (timeout 100.0))
+  (<span class="org-keyword">let</span> ((timeout timeout)
+        (i 0)
+        (initial-cost (funcall cost par)))
+    (<span class="org-keyword">let</span> ((*edit-distance-memo* (make-edit-distance-memo))
           (start-time (get-internal-real-time))
           (my-timeout timeout)
           (candidates (s:vect))
-          (candidate-costs (make-array 0 <span style="color: #7070a0;">:adjustable</span> t))
+          (candidate-costs (make-array 0 <span class="org-builtin">:adjustable</span> t))
           (par-1 par)
           (cost-1 initial-cost)
           (n 0))
-      (<span style="color: #7070a0;">handler-case</span>
-          (<span style="color: #7070a0;">sb-ext:with-timeout</span> my-timeout
-            (<span style="color: #7070a0;">catch</span> '<span style="color: #000000;">random-search</span>
-              (iter <span style="color: #7070a0; font-style: italic;">#+nil (for _ below restart)</span>
-                (<span style="color: #7070a0;">while</span> (&lt; n restart))
+      (<span class="org-keyword">handler-case</span>
+          (<span class="org-keyword">sb-ext:with-timeout</span> my-timeout
+            (<span class="org-keyword">catch</span> '<span class="org-constant">random-search</span>
+              (iter <span class="org-slime-reader-conditional">#+nil (for _ below restart)</span>
+                (<span class="org-keyword">while</span> (&lt; n restart))
                 (incf n)
-                (<span style="color: #7070a0;">setf</span> (fill-pointer candidates) 0)
-                (klet ((cont (par-2) (vector-push-extend par-2 candidates)))
-                  (funcall mutate par-1 #'cont))
-                (<span style="color: #7070a0;">setq</span> candidates (delete-duplicates candidates <span style="color: #7070a0;">:test</span> #'equalp))
-                (adjust-array candidate-costs (length candidates) <span style="color: #7070a0;">:initial-element</span> nil)
+                (<span class="org-keyword">setf</span> (fill-pointer candidates) 0)
+                (klet ((cont (par-2)
+                         (vector-push-extend par-2 candidates)))
+                  (funcall mutate #'cont par-1))
+                (<span class="org-keyword">setq</span> candidates (delete-duplicates candidates <span class="org-builtin">:test</span> #'equalp))
+                (adjust-array candidate-costs (length candidates)
+                              <span class="org-builtin">:initial-element</span> nil)
                 (iter (for i index-of-vector candidate-costs)
-                  (<span style="color: #7070a0;">setf</span> (aref candidate-costs i) nil))
+                  (<span class="org-keyword">setf</span> (aref candidate-costs i) nil))
                 (iter (for j from (* (length candidates) 4) by -1)
                   (for choice = (random (length candidates)))
                   (for candidate = (aref candidates choice))
                   (for cost-2 = (s:ensure (aref candidate-costs choice)
                                   (funcall cost candidate)))
-                  (<span style="color: #7070a0;">unless</span> (&gt; j 0)
-                    (log:info <span style="color: #FF4FA4;">"All candidates are bad, search interrupted."</span>)
-                    (<span style="color: #7070a0;">throw</span> '<span style="color: #000000;">random-search</span> nil))
-                  (<span style="color: #7070a0;">when</span> (accept-p cost-2 cost-1 beta)
-                    (<span style="color: #7070a0;">return</span> (<span style="color: #7070a0;">psetf</span> cost-1 cost-2 par-1 candidate))))
+                  (<span class="org-keyword">unless</span> (&gt; j 0)
+                    (log:info <span class="org-string">"All candidates are bad, search interrupted."</span>)
+                    (<span class="org-keyword">throw</span> '<span class="org-constant">random-search</span> nil))
+                  (<span class="org-keyword">when</span> (accept-p cost-2 cost-1 beta)
+                    (<span class="org-keyword">return</span> (<span class="org-keyword">psetf</span> cost-1 cost-2 par-1 candidate))))
                 (finally
-                 (<span style="color: #7070a0;">setq</span> timeout
+                 (<span class="org-keyword">setq</span> timeout
                        (/ (+ (* i timeout)
-                             (/ (- (get-internal-real-time) start-time) internal-time-units-per-second))
+                             (/ (- (get-internal-real-time) start-time)
+                                internal-time-units-per-second))
                           (1+ i)))
                  (incf i)))
               (print (list par-1 cost-1))
               nil))
         (sb-ext:timeout ()
-          (<span style="color: #7070a0;">setq</span> timeout (* my-timeout 1.5))
+          (<span class="org-keyword">setq</span> timeout (* my-timeout 1.5))
           nil)))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">pfun-cost</span> (pfun examples par)
-  (<span style="color: #7070a0;">let</span> ((cost-error
-          (<span style="color: #7070a0;">catch</span> '<span style="color: #000000;">cost</span>
-            (<span style="color: #7070a0;">let</span> ((*par* (compile-par par)))
+(<span class="org-keyword">defun</span> <span class="org-function-name">skeleton-cost</span> (skeleton examples par)
+  (<span class="org-keyword">let</span> ((cost-error
+          (<span class="org-keyword">catch</span> '<span class="org-constant">cost</span>
+            (<span class="org-keyword">let</span> ((*par* (compile-par par)))
               (iter (for (input output) in examples)
-                (for output-1 = (<span style="color: #7070a0;">with-resource-limit</span> (apply (pfun-function pfun) input)))
+                (for output-1 =
+                     (<span class="org-keyword">with-resource-limit</span>
+                       (apply (skeleton-function skeleton) input)))
                 (clrhash *edit-distance-memo*)
-                (sum (fastlog2 (<span style="color: #7070a0;">the</span> fixnum (1+ (edit-distance (return-type (pfun-type pfun))
-                                                              output output-1)))))))))
-        (cost-norm (fastlog2 (<span style="color: #7070a0;">the</span> fixnum (1+ (reduce #'+ par <span style="color: #7070a0;">:key</span> #'term-size))))))
+                (sum (fastlog2
+                      (<span class="org-keyword">the</span> fixnum
+                           (1+ (edit-distance
+                                (return-type (skeleton-type skeleton))
+                                output output-1)))))))))
+        (cost-norm (fastlog2
+                    (<span class="org-keyword">the</span> fixnum
+                         (1+ (reduce #'+ par <span class="org-builtin">:key</span> #'term-size))))))
     (values cost-error cost-norm)))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">solve-pfun</span> (pfun examples library-functions)
-  (<span style="color: #7070a0;">let</span> ((*library-table* (make-hash-table <span style="color: #7070a0;">:test</span> 'equal)))
-    (<span style="color: #7070a0;">labels</span> ((mutate (par cont)
-               (iter (for i index-of-vector par)
-                 (for hole in-vector (pfun-holes pfun))
-                 (klet ((cont (term)
-                          (<span style="color: #7070a0;">let</span> ((par (copy-seq par)))
-                            (<span style="color: #7070a0;">setf</span> (aref par i) term)
-                            (funcall cont par))))
-                   (generate-mutations (aref par i) hole #'cont))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">solve-skeleton</span> (skeleton examples library-functions)
+  (<span class="org-keyword">let</span> ((*library-table* (make-hash-table <span class="org-builtin">:test</span> 'equal)))
+    (<span class="org-keyword">labels</span> ((mutate (cont par)
+               (map-one cont #'generate-mutations
+                        par (skeleton-holes skeleton)))
              (cost (par)
-               (bind (((<span style="color: #7070a0;">:values</span> cost-error cost-norm) (pfun-cost pfun examples par)))
-                 <span style="color: #7070a0; font-style: italic;">#+nil (print (list par cost-error cost-norm))</span>
-                 (<span style="color: #7070a0;">when</span> (zerop cost-error)
-                   (<span style="color: #7070a0;">throw</span> '<span style="color: #000000;">random-search</span> par))
+               (bind (((<span class="org-builtin">:values</span> cost-error cost-norm)
+                       (skeleton-cost skeleton examples par)))
+                 <span class="org-slime-reader-conditional">#+nil (print (list par cost-error cost-norm))</span>
+                 (<span class="org-keyword">when</span> (zerop cost-error)
+                   (<span class="org-keyword">throw</span> '<span class="org-constant">random-search</span> par))
                  (+ cost-error cost-norm))))
-      (mapc (<span style="color: #7070a0;">lambda</span> (f) (add-library-function f (get f 'return-type))) (pfun-functions pfun))
-      (mapc (<span style="color: #7070a0;">lambda</span> (entry) (apply #'add-library-function entry)) library-functions)
+      (mapc
+       (<span class="org-keyword">lambda</span> (f) (add-library-function f (get f 'return-type)))
+       (skeleton-functions skeleton))
+      (mapc
+       (<span class="org-keyword">lambda</span> (entry) (apply #'add-library-function entry))
+       library-functions)
       (random-search
-       (map 'vector (a:compose #'default-term #'hole-type) (pfun-holes pfun))
+       (mapcar (compose #'default-term #'hole-type) (skeleton-holes skeleton))
        #'mutate #'cost))))
-<span style="color: #7070a0; font-style: italic;">#+nil (defun solve-pfuns (pfuns examples)</span>
-<span style="color: #7070a0; font-style: italic;">        (setq *pc* 0)</span>
-<span style="color: #7070a0; font-style: italic;">        (let ((tasks (make-hash-table)))</span>
-<span style="color: #7070a0; font-style: italic;">          (iter (for pfun in pfuns)</span>
-<span style="color: #7070a0; font-style: italic;">            (setf (gethash (pfun-task pfun examples) tasks) pfun))</span>
-<span style="color: #7070a0; font-style: italic;">          (unwind-protect</span>
-<span style="color: #7070a0; font-style: italic;">               (let ((channel (lparallel:make-channel)))</span>
-<span style="color: #7070a0; font-style: italic;">                 (iter (for _ below (ceiling (lparallel:kernel-worker-count) (hash-table-count tasks)))</span>
-<span style="color: #7070a0; font-style: italic;">                   (iter (for (task _) in-hashtable tasks)</span>
-<span style="color: #7070a0; font-style: italic;">                     (lparallel:submit-task channel task)))</span>
-<span style="color: #7070a0; font-style: italic;">                 (iter</span>
-<span style="color: #7070a0; font-style: italic;">                   (for (task par) = (lparallel:receive-result channel))</span>
-<span style="color: #7070a0; font-style: italic;">                   (when par (return (list (gethash task tasks) par)))</span>
-<span style="color: #7070a0; font-style: italic;">                   (lparallel:submit-task channel task)))</span>
-<span style="color: #7070a0; font-style: italic;">            (stop-tasks))))</span>
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org2cc77e5" class="outline-3">
-<h3 id="org2cc77e5">Profiling</h3>
-<div class="outline-text-3" id="text-org2cc77e5">
+<div id="outline-container-org0ccf203" class="outline-3">
+<h3 id="org0ccf203"><span class="section-number-3">2.8.</span> Profiling</h3>
+<div class="outline-text-3" id="text-2-8">
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">call-with-advices</span> (names advices thunk)
-  (mapcar (<span style="color: #7070a0;">lambda</span> (name advice) (sb-int:encapsulate name 'profiling advice))
-          names advices)
-  (<span style="color: #7070a0;">unwind-protect</span> (funcall thunk)
-    (mapcar (<span style="color: #7070a0;">lambda</span> (name) (sb-int:unencapsulate name 'profiling))
-            names)))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">with-advices</span> (name-and-advices <span style="color: #7070a0;">&amp;body</span> body)
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">call-with-advices</span> (names advices thunk)
+  (mapcar
+   (<span class="org-keyword">lambda</span> (name advice)
+     (sb-int:encapsulate name 'profiling advice))
+   names advices)
+  (<span class="org-keyword">unwind-protect</span> (funcall thunk)
+    (mapcar
+     (<span class="org-keyword">lambda</span> (name) (sb-int:unencapsulate name 'profiling))
+     names)))
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">with-advices</span> (name-and-advices <span class="org-builtin">&amp;body</span> body)
   `(call-with-advices
     ',(mapcar #'car name-and-advices)
     (list ,@(mapcar #'cadr name-and-advices))
-    (<span style="color: #7070a0;">lambda</span> () ,@body)))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">call-with-profiling</span> (thunk)
-  (<span style="color: #7070a0;">let</span> ((evaluation-errors 0)
+    (<span class="org-keyword">lambda</span> () ,@body)))
+(<span class="org-keyword">defun</span> <span class="org-function-name">call-with-profiling</span> (thunk)
+  (<span class="org-keyword">let</span> ((evaluation-errors 0)
         (programs 0)
         (accepted-programs 0)
         (time-start (get-internal-real-time)))
-    (log:info <span style="color: #FF4FA4;">"Profiling started"</span>)
-    (<span style="color: #7070a0;">unwind-protect</span>
-         (<span style="color: #7070a0;">with-advices</span>
-             ((<span style="color: #FF4FA4;">check-resource-limit</span>
-               (<span style="color: #7070a0;">lambda</span> (orig)
-                 (<span style="color: #7070a0;">let</span> (success-p)
-                   (<span style="color: #7070a0;">unwind-protect</span>
-                        (<span style="color: #7070a0;">prog1</span> (funcall orig) (<span style="color: #7070a0;">setq</span> success-p t))
-                     (<span style="color: #7070a0;">unless</span> success-p (incf evaluation-errors))))))
-              (pfun-cost
-               (<span style="color: #7070a0;">lambda</span> (orig <span style="color: #7070a0;">&amp;rest</span> args)
+    (log:info <span class="org-string">"Profiling started"</span>)
+    (<span class="org-keyword">unwind-protect</span>
+         (<span class="org-keyword">with-advices</span>
+             ((<span class="org-warning">check-resource-limit</span>
+               (<span class="org-keyword">lambda</span> (orig)
+                 (<span class="org-keyword">let</span> (success-p)
+                   (<span class="org-keyword">unwind-protect</span>
+                        (<span class="org-keyword">prog1</span> (funcall orig)
+                          (<span class="org-keyword">setq</span> success-p t))
+                     (<span class="org-keyword">unless</span> success-p
+                       (incf evaluation-errors))))))
+              (skeleton-cost
+               (<span class="org-keyword">lambda</span> (orig <span class="org-builtin">&amp;rest</span> args)
                  (incf programs)
                  (apply orig args)))
               (accept-p
-               (<span style="color: #7070a0;">lambda</span> (orig <span style="color: #7070a0;">&amp;rest</span> args)
-                 (<span style="color: #7070a0;">when</span> (apply orig args)
+               (<span class="org-keyword">lambda</span> (orig <span class="org-builtin">&amp;rest</span> args)
+                 (<span class="org-keyword">when</span> (apply orig args)
                    (incf accepted-programs)
                    t))))
            (funcall thunk))
-      (<span style="color: #7070a0;">let</span> ((time (/ (- (get-internal-real-time) time-start) internal-time-units-per-second)))
-        (log:info <span style="color: #FF4FA4;">"Profiling ended. ~a programs, ~a accepted, ~a evaluation errors, ~,3f s real time, ~,1f p/s."</span>
+      (<span class="org-keyword">let</span> ((time (/ (- (get-internal-real-time) time-start)
+                     internal-time-units-per-second)))
+        (log:info <span class="org-string">"Profiling ended. ~a programs, ~a accepted, ~a evaluation errors, ~,3f s real time, ~,1f p/s."</span>
                   programs accepted-programs evaluation-errors
                   time (/ programs time))))))
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">with-profiling</span> (<span style="color: #7070a0;">&amp;body</span> body)
-  `(call-with-profiling (<span style="color: #7070a0;">lambda</span> () ,@body)))
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">with-profiling</span> (<span class="org-builtin">&amp;body</span> body)
+  `(call-with-profiling (<span class="org-keyword">lambda</span> () ,@body)))
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7e5522f" class="outline-3">
-<h3 id="org7e5522f">Test Generation</h3>
-<div class="outline-text-3" id="text-org7e5522f">
+<div id="outline-container-org4ba2742" class="outline-3">
+<h3 id="org4ba2742"><span class="section-number-3">2.9.</span> Test Generation</h3>
+<div class="outline-text-3" id="text-2-9">
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">sample</span> (type)
-  (<span style="color: #7070a0;">let</span> ((op (nth (random (length (constructors type))) (constructors type))))
-    (<span style="color: #7070a0;">if</span> (fboundp op)
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">sample</span> (type)
+  (<span class="org-keyword">let</span> ((op (nth (random (length (constructors type)))
+                 (constructors type))))
+    (<span class="org-keyword">if</span> (fboundp op)
         (apply op (mapcar #'sample (arg-types op type)))
         op)))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">samples</span> (type n <span style="color: #7070a0;">&amp;optional</span> (size 50))
-  (<span style="color: #7070a0;">let</span> (results)
-    (iter (<span style="color: #7070a0;">while</span> (&lt; (length results) n))
-      (<span style="color: #7070a0;">let</span> ((sample (sample type)))
-        (<span style="color: #7070a0;">when</span> (&lt; (value-size type sample) size)
-          (pushnew sample results <span style="color: #7070a0;">:test</span> #'equal))))
-    (sort results #'&lt; <span style="color: #7070a0;">:key</span> (value-size-function type))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">generate-examples</span> (symbol n <span style="color: #7070a0;">&amp;optional</span> (output-size (get symbol <span style="color: #7070a0;">:output-size</span> 200)))
-  (bind (((<span style="color: #7070a0;">:plist</span> type) (symbol-plist symbol))
+(<span class="org-keyword">defun</span> <span class="org-function-name">samples</span> (type n <span class="org-builtin">&amp;optional</span> (size 50))
+  (<span class="org-keyword">let</span> (results)
+    (iter (<span class="org-keyword">while</span> (&lt; (length results) n))
+      (<span class="org-keyword">let</span> ((sample (sample type)))
+        (<span class="org-keyword">when</span> (&lt; (value-size type sample) size)
+          (pushnew sample results <span class="org-builtin">:test</span> #'equal))))
+    (sort results #'&lt; <span class="org-builtin">:key</span> (value-size-function type))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">generate-examples</span>
+    (symbol n <span class="org-builtin">&amp;optional</span> (output-size (get symbol <span class="org-builtin">:output-size</span> 200)))
+  (bind (((<span class="org-builtin">:plist</span> type) (symbol-plist symbol))
          ((_ argument-types result-type) type)
          (argument-type `(tuple ,@argument-types)))
-    (<span style="color: #7070a0;">let</span> (results)
+    (<span class="org-keyword">let</span> (results)
       (iter (for _ below 1000)
-        (<span style="color: #7070a0;">while</span> (&lt; (length results) n))
+        (<span class="org-keyword">while</span> (&lt; (length results) n))
         (bind ((inputs (sample argument-type)))
-          (<span style="color: #7070a0;">when</span> (&lt; (value-size argument-type inputs) 30)
+          (<span class="org-keyword">when</span> (&lt; (value-size argument-type inputs) 30)
             (bind ((output (apply symbol inputs)))
-              (<span style="color: #7070a0;">when</span> (&lt; (value-size result-type output) output-size)
-                (pushnew (list inputs output) results <span style="color: #7070a0;">:test</span> #'equal))))))
-      (sort results #'&lt; <span style="color: #7070a0;">:key</span> (<span style="color: #7070a0;">lambda</span> (r) (value-size argument-type (car r)))))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">test-solution</span> (tests pfun par)
-  (<span style="color: #7070a0;">handler-case</span>
-      (<span style="color: #7070a0;">sb-ext:with-timeout</span> 1
+              (<span class="org-keyword">when</span> (&lt; (value-size result-type output) output-size)
+                (pushnew (list inputs output) results <span class="org-builtin">:test</span> #'equal))))))
+      (sort results #'&lt;
+            <span class="org-builtin">:key</span> (<span class="org-keyword">lambda</span> (r) (value-size argument-type (car r)))))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">test-solution</span> (tests skeleton par)
+  (<span class="org-keyword">handler-case</span>
+      (<span class="org-keyword">sb-ext:with-timeout</span> 1
         (iter (for (inputs output) in tests)
           (accumulate
-           (equal (apply #'call-pfun pfun par inputs)
+           (equal (apply #'call-skeleton skeleton par inputs)
                   output)
            by #'and initial-value t)))
     (t ())))
@@ -947,30 +1231,30 @@ We compile specialized versions of <code>value-size-function</code> and <code>ed
 </div>
 </div>
 
-<div id="outline-container-orgb87c72a" class="outline-3">
-<h3 id="orgb87c72a">Built-in Types</h3>
-<div class="outline-text-3" id="text-orgb87c72a">
+<div id="outline-container-org5b04c31" class="outline-3">
+<h3 id="org5b04c31"><span class="section-number-3">2.10.</span> Built-in Types</h3>
+<div class="outline-text-3" id="text-2-10">
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">deftype</span> <span style="color: #000000;">list-of</span> (element-type) (<span style="color: #7070a0;">declare</span> (ignore element-type)) t)
-(<span style="color: #7070a0;">deftype</span> <span style="color: #000000;">tree-of</span> (element-type) (<span style="color: #7070a0;">declare</span> (ignore element-type)) t)
-(<span style="color: #7070a0;">deftype</span> <span style="color: #000000;">nat</span> () '(and fixnum (integer 0)))
+<pre class="src src-lisp">(<span class="org-keyword">deftype</span> <span class="org-type">list-of</span> (element-type) (<span class="org-keyword">declare</span> (ignore element-type)) t)
+(<span class="org-keyword">deftype</span> <span class="org-type">tree-of</span> (element-type) (<span class="org-keyword">declare</span> (ignore element-type)) t)
+(<span class="org-keyword">deftype</span> <span class="org-type">nat</span> () '(and fixnum (integer 0)))
 
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">succ</span> (x) (1+ x))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">zero</span> () 0)
+(<span class="org-keyword">defun</span> <span class="org-function-name">succ</span> (x) (1+ x))
+(<span class="org-keyword">defun</span> <span class="org-function-name">zero</span> () 0)
 
-(<span style="color: #7070a0;">setf</span> (constructors 'list-of) '(cons nil)
-      (get 'cons 'arg-types)
-      (t:lambda-ematch1 (list 'list-of x) `(,x (list-of ,x)))
+(<span class="org-keyword">setf</span> (constructors 'list-of) '(cons nil)
+      (get 'cons 'arg-types) (t:lambda-ematch1 (list 'list-of x)
+                               `(,x (list-of ,x)))
       (get 'cons 'accessors) '(car cdr)
 
       (get 'nil 'arg-types) nil
       (get 'nil 'accessors) nil
       (get 'nil 'cl-type) 'null)
 
-(<span style="color: #7070a0;">setf</span> (constructors 'boolean) '(nil t)
+(<span class="org-keyword">setf</span> (constructors 'boolean) '(nil t)
       (get 't 'arg-types) nil)
 
-(<span style="color: #7070a0;">setf</span> (constructors 'nat) '(zero succ)
+(<span class="org-keyword">setf</span> (constructors 'nat) '(zero succ)
       (get 'zero 'arg-types) nil
       (get 'zero 'accessors) nil
       (get 'zero 'cl-type) '(integer 0 0)
@@ -978,44 +1262,74 @@ We compile specialized versions of <code>value-size-function</code> and <code>ed
       (get 'succ 'accessors) '(1-)
       (get 'succ 'cl-type) '(and fixnum (integer 1)))
 
-(<span style="color: #7070a0;">setf</span> (constructors 'tuple) '(list)
-      (get 'list 'arg-types) (t:lambda-ematch1 (list* 'tuple arg-types) arg-types)
-      (get 'list 'accessors)
-      (iter (for i below 16) (collect `(<span style="color: #7070a0;">lambda</span> (x) (nth ,i x)))))
+(<span class="org-keyword">setf</span> (constructors 'tuple) '(list)
+      (get 'list 'arg-types) (t:lambda-ematch1 (list* 'tuple arg-types)
+                               arg-types)
+      (get 'list 'accessors) (map-iota
+                              (<span class="org-keyword">lambda</span> (i) `(<span class="org-keyword">lambda</span> (x) (nth ,i x)))
+                              16))
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org65a86d5" class="outline-3">
-<h3 id="org65a86d5">Convience</h3>
-<div class="outline-text-3" id="text-org65a86d5">
+<div id="outline-container-org049f3df" class="outline-3">
+<h3 id="org049f3df"><span class="section-number-3">2.11.</span> Convience</h3>
+<div class="outline-text-3" id="text-2-11">
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">call-pfun</span> (pfun par <span style="color: #7070a0;">&amp;rest</span> args)
-  (<span style="color: #7070a0;">with-resource-limit</span>
-    (<span style="color: #7070a0;">let</span> ((*par* (compile-par par)))
-      (apply (pfun-function pfun) args))))
-(<span style="color: #7070a0;">defun</span> <span style="color: #000000;">pfun-label</span> (pfun n) (nth n (pfun-functions pfun)))
-(<span style="color: #7070a0;">defvar</span> <span style="color: #000000;">*problems*</span> nil)
-(<span style="color: #7070a0;">defmacro</span> <span style="color: #000000;">defproblem</span> (name argument-types result-type args <span style="color: #7070a0;">&amp;body</span> body)
-  `(<span style="color: #7070a0;">progn</span>
+<pre class="src src-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">call-skeleton</span> (skeleton par <span class="org-builtin">&amp;rest</span> args)
+  (<span class="org-keyword">with-resource-limit</span>
+    (<span class="org-keyword">let</span> ((*par* (compile-par par)))
+      (apply (skeleton-function skeleton) args))))
+(<span class="org-keyword">defun</span> <span class="org-function-name">skeleton-label</span> (skeleton n) (nth n (skeleton-functions skeleton)))
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">*problems*</span> nil)
+(<span class="org-keyword">defmacro</span> <span class="org-function-name">defproblem</span> (name argument-types result-type args <span class="org-builtin">&amp;body</span> body)
+  `(<span class="org-keyword">progn</span>
      (export '(,name))
      (pushnew ',name *problems*)
-     (<span style="color: #7070a0;">setf</span> (get ',name <span style="color: #7070a0;">:type</span>) '(function ,argument-types ,result-type))
-     (<span style="color: #7070a0;">defun</span> ,name ,args ,@body)))
+     (<span class="org-keyword">setf</span> (get ',name <span class="org-builtin">:type</span>) '(function ,argument-types ,result-type))
+     (<span class="org-keyword">defun</span> ,name ,args ,@body)))
 </pre>
 </div>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org97440f1" class="outline-2">
-<h2 id="org97440f1">Emacs Support</h2>
-<div class="outline-text-2" id="text-org97440f1">
+<div id="outline-container-orgcdf2959" class="outline-2">
+<h2 id="orgcdf2959"><span class="section-number-2">3.</span> Experiments</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">defpackage</span> <span class="org-builtin">#:genrec/experiments</span>
+  (<span class="org-builtin">:use</span> <span class="org-builtin">#:cl</span> <span class="org-builtin">#:genrec</span>))
+(<span class="org-keyword">in-package</span> <span class="org-builtin">#:genrec/experiments</span>)
+</pre>
 </div>
-<div id="outline-container-org5e40a8c" class="outline-3">
-<h3 id="org5e40a8c">Notes</h3>
-<div class="outline-text-3" id="text-org5e40a8c">
+</div>
+<div id="outline-container-org3497d01" class="outline-3">
+<h3 id="org3497d01"><span class="section-number-3">3.1.</span> Natural Numbers</h3>
+</div>
+<div id="outline-container-orgf77b196" class="outline-3">
+<h3 id="orgf77b196"><span class="section-number-3">3.2.</span> Lambda Calculus (de Brujin index)</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-lisp">(<span class="org-keyword">define-adt</span> lc
+  (var (index nat))
+  (lam (body lc))
+  (app (op lc) (arg lc)))
+(<span class="org-keyword">define-adt</span> lcv
+  (clo (env (list-of lcv)) (body lc))
+  (bot))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7e0dca4" class="outline-2">
+<h2 id="org7e0dca4"><span class="section-number-2">4.</span> Emacs Support</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org6118029" class="outline-3">
+<h3 id="org6118029"><span class="section-number-3">4.1.</span> Notes</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 <code>literate-lisp</code> with <code>poly-org</code> is super cool, but as of time of writing (<span class="timestamp-wrapper"><span class="timestamp">&lt;2023-02-06 Mon&gt;</span></span>) they're still a bit buggy.
 </p>
@@ -1029,26 +1343,24 @@ To be safe, use short cut <code>&lt; s TAB</code> to make a new source block and
 <p>
 Various <code>org</code> niceties interact with <code>poly-org</code> setup nicely or badly. Here are some tested:
 </p>
+<dl class="org-dl">
+<dt>&checkmark;</dt><dd><code>visual-line-mode</code></dd>
+<dt>&times;</dt><dd><code>org-variable-pitch-minor-mode</code></dd>
+<dt>&checkmark;</dt><dd><code>org-appear-mode</code> does not re-fontify when cursor move out of revealed element.</dd>
+<dt>&checkmark;</dt><dd><code>org-super-mode</code></dd>
+<dt>&times;</dt><dd><code>org-indent-mode</code> breaks fontification (syntax highlighting) in code blocks
 <ul class="org-ul">
-<li>✅  <code>visual-line-mode</code></li>
-<li>✅  <code>org-variable-pitch-minor-mode</code></li>
-<li>❌ <code>org-appear-mode</code> does not re-fontify when cursor move out of revealed element.</li>
-<li>✅  <code>org-super-mode</code></li>
-<li>❌ <code>org-indent-mode</code> breaks fontification (syntax highlighting) in code blocks
-Workaround: run <code>M-x org-indent-indent-buffer</code> manually</li>
-</ul>
+<li>Workaround: run <code>M-x org-indent-indent-buffer</code> manually</li>
+</ul></dd>
+<dt>&checkmark;</dt><dd><code>(setq org-pretty-entities t)</code></dd>
+</dl>
 </div>
 </div>
-<div id="outline-container-orgbf7f3e1" class="outline-3">
-<h3 id="orgbf7f3e1">Configurations</h3>
-<div class="outline-text-3" id="text-orgbf7f3e1">
+<div id="outline-container-orge59dc51" class="outline-3">
+<h3 id="orge59dc51"><span class="section-number-3">4.2.</span> Configurations</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
 Disable leading indentation to ensure <code>beginning-of-defun</code> and <code>end-of-defun</code> works properly. This ensures important SLIME functions (e.g. <code>slime-compile-defun</code>) work properly.
-Local Variables:
-org-edit-src-content-indentation: 0
-org-adapt-indentation: nil
-org-export-use-babel: nil
-End:
 </p>
 </div>
 </div>
@@ -1056,7 +1368,7 @@ End:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Hong Qiantan</p>
-<p class="date">Created: 2023-02-06 Mon 14:04</p>
+<p class="date">Created: 2023-02-09 Thu 23:15</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
